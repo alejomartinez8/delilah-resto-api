@@ -24,7 +24,7 @@ function createValidate(req, res, next) {
 function create(req, res, next) {
   productService
     .create(req.body)
-    .then(() => res.json({ msg: "Register Successfully" }))
+    .then(() => res.json({ msg: "Product created successfully" }))
     .catch(next);
 }
 
