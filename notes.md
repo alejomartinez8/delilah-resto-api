@@ -33,6 +33,8 @@ Model:
 - imgUrl
 - description
 
+# Endpoints
+
 - GET /products -> Get all (All)
 - GET /products/:id -> Get Product (All)
 - POST /products/create -> Create product (Admin)
