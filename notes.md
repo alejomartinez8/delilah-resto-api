@@ -1,6 +1,7 @@
-# User
+# Delilah restó API
+## User
 
-## Model:
+### Model:
 
 ```
 - username
@@ -11,7 +12,7 @@
 - password
 ```
 
-# Endpoints:
+### Endpoints:
 
 - POST /users/login -> Login (All)
 - POST /users/register -> Register (All)
@@ -21,7 +22,7 @@
 - PUT /users/update/:id -> Update User (Only self or Admin)
 - DELETE /users/delete/:id -> Delete User (Only self or Admin)
 
-# Products
+## Products
 
 Model:
 
@@ -32,7 +33,7 @@ Model:
 - description
 ```
 
-## Endpoints
+### Endpoints
 
 - GET /products -> Get all (All)
 - GET /products/:id -> Get Product (All)
@@ -40,9 +41,9 @@ Model:
 - PUT /products/update/:id -> Update product (Admin)
 - DELETE /products/delete/:id -> Delete (Admin)
 
-# Orders
+## Orders
 
-## Model:
+### Model:
 
 ```
 - productsList
@@ -55,7 +56,7 @@ Model:
 - id
 ```
 
-## Endpoints
+### Endpoints
 
 - POST /orders/create -> Create an order (All)
 - PUT /orders/update/:id -> Update order (All) - Admin only can update state
@@ -63,7 +64,7 @@ Model:
 - GET /order/getById -> Get an specific order (Admin - Users if owner)
 - DELETE /orders/delete/:id -> Delete order (Admin)
 
-## Exceptions:
+### Exceptions:
 
 - only admin can modify state
 - if order is close only admin can modify or delete
