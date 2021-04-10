@@ -2,14 +2,14 @@
 
 # Model:
 
-_ productsList
-_ state
-_ paymentType
-_ paymentValue
-_ address
-_ user
-_ hour
-_ id
+- productsList
+- state
+- paymentType
+- paymentValue
+- address
+- user
+- hour
+- id
 
 POST /orders/create -> Create an order (All)
 PUT /orders/update/:id -> Update order (All) - Admin only can update state
