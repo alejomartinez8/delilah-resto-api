@@ -3,9 +3,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+var morgan = require("morgan");
 
-app.use(logger("dev"));
+app.use(morgan("combined"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());

@@ -1,4 +1,5 @@
 function errorHadndler(err, req, res) {
+  console.log(err);
   if (typeof err === "string") {
     const is404 = err.toLowerCase().endsWith("not found");
     const statusCode = is404 ? 404 : 400;
