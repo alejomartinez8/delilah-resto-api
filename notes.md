@@ -1,6 +1,6 @@
-## Orders
+# Orders
 
-# Model:
+## Model:
 
 - productsList
 - state
@@ -11,7 +11,7 @@
 - hour
 - id
 
-# Endpoints
+## Endpoints
 
 - POST /orders/create -> Create an order (All)
 - PUT /orders/update/:id -> Update order (All) - Admin only can update state
@@ -19,12 +19,12 @@
 - GET /order/getById -> Get an specific order (Admin - Users if owner)
 - DELETE /orders/delete/:id -> Delete order (Admin)
 
-# Excepctions:
+## Excepctions:
 
 - only admin can modify state
 - if order is close only admin can modify or delete
 
-## Products
+# Products
 
 Model:
 
@@ -33,7 +33,7 @@ Model:
 - imgUrl
 - description
 
-# Endpoints
+## Endpoints
 
 - GET /products -> Get all (All)
 - GET /products/:id -> Get Product (All)
@@ -41,9 +41,9 @@ Model:
 - PUT /products/update/:id -> Update product (Admin)
 - DELETE /products/delete/:id -> Delete (Admin)
 
-## User
+# User
 
-# Model:
+## Model:
 
 - username
 - names
@@ -52,7 +52,7 @@ Model:
 - address
 - password
 
-# Endpoints:
+## Endpoints:
 
 - POST /users/login -> Login (All)
 - POST /users/register -> Register (All)
