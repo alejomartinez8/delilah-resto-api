@@ -37,13 +37,13 @@ async function getAll() {
 
 // getUser
 async function getUser(id) {
-  const user = await db.User.findByPk(id);
-  if (!user) throw "User not found";
-  return user;
+  const userDB = await db.User.findByPk(id);
+  if (!userDB) throw "User not found";
+  return userDB;
 }
 
-// updateUser
-async function updateUser(req, res) {
+// update
+async function update(req, res) {
   const userDB = await getUser(req.params.id);
   if (!userDB) throw "User not found";
 
@@ -77,8 +77,8 @@ async function updateUser(req, res) {
   return filterPassword(userDB.get());
 }
 
-// deleteUser
-async function deleteUser(req, res) {
+// _delete
+async function _delete(req, res) {
   const userDB = await getUser(req.params.id);
   if (!userDB) throw "User not found";
 
@@ -100,6 +100,6 @@ module.exports = {
   create,
   getAll,
   getUser,
-  updateUser,
-  deleteUser,
+  update,
+  _delete,
 };

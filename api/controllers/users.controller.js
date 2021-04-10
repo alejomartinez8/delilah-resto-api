@@ -7,11 +7,11 @@ const userService = require("../services/user.service");
 
 router.post("/login", loginValidate, login);
 router.post("/register", registerValidate, register);
-router.get("/", authorize("admin"), getAll);
+router.get("/", authorize(["admin"]), getAll);
 router.get("/getUser", authorize(), getUser);
-router.get("/:id", authorize("admin"), getById);
-router.put("/:id", authorize(), updateValidate, updateUser);
-router.delete("/:id", authorize(), deleteUser);
+router.get("/:id", authorize(["admin"]), getById);
+router.put("/:id", authorize(), updateValidate, update);
+router.delete("/:id", authorize(), _delete);
 
 module.exports = router;
 
@@ -93,16 +93,16 @@ function updateValidate(req, res, next) {
   validateRequest(req, next, schema);
 }
 
-function updateUser(req, res, next) {
+function update(req, res, next) {
   userService
-    .updateUser(req, res)
+    .update(req, res)
     .then(() => res.json({ msg: "Update Successfully" }))
     .catch(next);
 }
 
-function deleteUser(req, res, next) {
+function _delete(req, res, next) {
   userService
-    .deleteUser(req, res)
+    ._delete(req, res)
     .then(() => res.json({ msg: "Delete Successfully" }))
     .catch(next);
 }

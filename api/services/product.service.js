@@ -17,9 +17,9 @@ async function getAll() {
 
 // getById
 async function getById(id) {
-  const product = await db.Product.findByPk(id);
-  if (!product) throw "Product not found";
-  return product.get();
+  const productDB = await db.Product.findByPk(id);
+  if (!productDB) throw "Product not found";
+  return productDB;
 }
 
 // update
@@ -29,7 +29,7 @@ async function update(req, res) {
 
   Object.assign(productDB, req.body);
   await productDB.save();
-  return productDB.get();
+  return await productDB.get();
 }
 
 // _delete

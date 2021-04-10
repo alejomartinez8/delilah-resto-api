@@ -1,4 +1,5 @@
 # Delilah restó API
+
 ## User
 
 ### Model:
@@ -19,8 +20,8 @@
 - GET /users/getUser -> Get self info (All)
 - GET /users/getById/:id -> Infor User by Id (Only Admin)
 - GET /users -> Get all (Only Admin)
-- PUT /users/update/:id -> Update User (Only self or Admin)
-- DELETE /users/delete/:id -> Delete User (Only self or Admin)
+- PUT /users/:id -> Update User (Only self or Admin)
+- DELETE /users/:id -> Delete User (Only self or Admin)
 
 ## Products
 
@@ -38,8 +39,8 @@ Model:
 - GET /products -> Get all (All)
 - GET /products/:id -> Get Product (All)
 - POST /products/create -> Create product (Admin)
-- PUT /products/update/:id -> Update product (Admin)
-- DELETE /products/delete/:id -> Delete (Admin)
+- PUT /products/:id -> Update product (Admin)
+- DELETE /products/:id -> Delete (Admin)
 
 ## Orders
 
@@ -58,11 +59,11 @@ Model:
 
 ### Endpoints
 
-- POST /orders/create -> Create an order (All)
-- PUT /orders/update/:id -> Update order (All) - Admin only can update state
-- GET /orders/getAll -> Get all orders (Admin - User if owner)
-- GET /order/getById -> Get an specific order (Admin - Users if owner)
-- DELETE /orders/delete/:id -> Delete order (Admin)
+- POST /orders/create -> Create an order (User - Admin)
+- GET /orders -> Get all orders (User(owner) - Admin)
+- GET /order/getById -> Get an specific order (User(owner) - Admin)
+- PUT /orders/:id -> Update order (User(owner) - Admin)
+- DELETE /orders/:id -> Delete order (User(owner) - Admin)
 
 ### Exceptions:
 
