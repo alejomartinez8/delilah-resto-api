@@ -2,11 +2,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const db = require("../../helpers/db");
 
-module.exports = {
-  login,
-  create,
-};
-
 function omitPassword(user) {
   const { password, ...userWithoutPassword } = user;
   return userWithoutPassword;
@@ -38,5 +33,15 @@ async function create(params) {
     params.password = await bcrypt.hash(params.password, 10);
   }
 
-  await db.User.create(params);
+  return await db.User.create(params);
 }
+
+async function getAll() {
+  return await db.User.findAll();
+}
+
+module.exports = {
+  login,
+  create,
+  getAll,
+};

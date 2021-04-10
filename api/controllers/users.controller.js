@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
 const validateRequest = require("../../helpers/validateRequest");
+const authorize = require("../../middleware/authorize");
 const userService = require("../services/user.service");
 
 router.post("/login", loginValidate, login);
 router.post("/register", registerValidate, register);
+router.get("/", authorize("admin"), getAll);
 
 module.exports = router;
 
@@ -45,5 +47,13 @@ function registerValidate(req, res, next) {
 function register(req, res, next) {
   userService
     .create(req.body)
-    .then(() => res.json({ msg: "Register Successfully" }));
+    .then(() => res.json({ msg: "Register Successfully" }))
+    .catch(next);
+}
+
+function getAll(req, res, next) {
+  userService
+    .getAll()
+    .then((users) => res.json(users))
+    .catch(next);
 }

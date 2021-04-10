@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
 const mysql = require("mysql2/promise");
+const User = require("../api/models/user.model");
 
 module.exports = db = {};
 
@@ -31,11 +32,11 @@ async function dbInit() {
   );
 
   // Init Models
-  db.User = require("../api/models/user.model")(sequelize);
+  db.User = User(sequelize);
 
   // Sync
   try {
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
   } catch (error) {
     console.error({ error });
   }
