@@ -47,14 +47,14 @@ Model:
 ### Model:
 
 ```
+- orderId
+- orderDate
 - productsList
-- state
 - paymentType
 - paymentValue
 - address
 - user
-- hour
-- orderId
+- status
 ```
 
 ### Endpoints

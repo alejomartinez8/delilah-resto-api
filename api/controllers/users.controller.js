@@ -8,8 +8,8 @@ const userService = require("../services/user.service");
 router.post("/login", loginValidate, login);
 router.post("/register", registerValidate, register);
 router.get("/", authorize(["admin"]), getAll);
-router.get("/getUser", authorize(), getUser);
 router.get("/:id", authorize(["admin"]), getById);
+router.get("/getUser", authorize(), getUser);
 router.put("/:id", authorize(), updateValidate, update);
 router.delete("/:id", authorize(), _delete);
 
