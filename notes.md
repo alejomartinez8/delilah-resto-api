@@ -2,12 +2,14 @@
 
 ## Model:
 
+```
 - username
 - names
 - email
 - phone
 - address
 - password
+```
 
 # Endpoints:
 
@@ -23,10 +25,12 @@
 
 Model:
 
+```
 - name
 - price
 - imgUrl
 - description
+```
 
 ## Endpoints
 
@@ -40,6 +44,7 @@ Model:
 
 ## Model:
 
+```
 - productsList
 - state
 - paymentType
@@ -48,6 +53,7 @@ Model:
 - user
 - hour
 - id
+```
 
 ## Endpoints
 
