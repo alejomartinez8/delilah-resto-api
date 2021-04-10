@@ -41,7 +41,7 @@ function registerValidate(req, res, next) {
         tlds: { allow: ["com", "net"] },
       })
       .required(),
-    phoneNumber: Joi.string(),
+    phone: Joi.string(),
     address: Joi.string(),
     password: Joi.string().min(6).required(),
   });

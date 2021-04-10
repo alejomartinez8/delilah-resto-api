@@ -4,7 +4,7 @@
   "description": "API delilah resto online orders",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server"
+    "dev": "nodemon -e .yaml .js server"
   },
   "author": "Alejandro Martinez",
   "license": "ISC",
