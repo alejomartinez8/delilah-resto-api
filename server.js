@@ -2,8 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-var cookieParser = require("cookie-parser");
-var morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
+const usersController = require("./api/controllers/users.controller");
+const productsController = require("./api/controllers/products.controller");
 
 app.use(morgan("combined"));
 app.use(express.urlencoded({ extended: false }));
@@ -12,7 +14,8 @@ app.use(cookieParser());
 app.use(cors());
 
 // api routes
-app.use("/users", require("./api/controllers/users.controller"));
+app.use("/users", usersController);
+app.use("/products", productsController);
 
 // swagger docs route
 app.use("/api-docs", require("./helpers/swagger"));

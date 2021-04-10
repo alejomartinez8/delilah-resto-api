@@ -35,7 +35,7 @@ async function getAll() {
   return await db.User.findAll();
 }
 
-// getUSer
+// getUser
 async function getUser(id) {
   const user = await db.User.findByPk(id);
   if (!user) throw "User not found";
@@ -47,7 +47,7 @@ async function updateUser(req, res) {
   const userDB = await getUser(req.params.id);
   if (!userDB) throw "User not found";
 
-  // Only can modify itself or admin role
+  // Only can modify to self or admin role
   if (req.user.id !== userDB.id && req.user.role === "user")
     return res.status(401).json({ msg: "Unauthorized" });
 
@@ -82,7 +82,7 @@ async function deleteUser(req, res) {
   const userDB = await getUser(req.params.id);
   if (!userDB) throw "User not found";
 
-  // Only can modify itself or admin role
+  // Only can modify to self or admin role
   if (req.user.id !== userDB.id && req.user.role === "user")
     return res.status(401).json({ msg: "Unauthorized" });
 
