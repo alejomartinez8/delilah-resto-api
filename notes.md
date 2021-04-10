@@ -53,7 +53,7 @@ Model:
 - address
 - user
 - hour
-- id
+- orderId
 ```
 
 ### Endpoints
