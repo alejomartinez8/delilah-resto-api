@@ -63,7 +63,7 @@ Model:
 - GET /order/getById -> Get an specific order (Admin - Users if owner)
 - DELETE /orders/delete/:id -> Delete order (Admin)
 
-## Excepctions:
+## Exceptions:
 
 - only admin can modify state
 - if order is close only admin can modify or delete
