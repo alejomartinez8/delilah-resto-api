@@ -5,11 +5,11 @@ const validateRequest = require("../../helpers/validateRequest");
 const authorize = require("../../middleware/authorize");
 const orderService = require("../services/order.service");
 
-router.get("/", authorize(["admin"]), getAll);
-router.post("/", authorize(["user, admin"]), createValidate, create);
-router.get("/:id", authorize(["user", "admin"]), getById);
-router.put("/:id", authorize(["user", "admin"]), updateValidate, update);
-router.delete("/:id", authorize(["user", "admin"]), _delete);
+router.post("/", authorize("user, admin"), createValidate, create);
+router.get("/", authorize("admin"), getAll);
+router.get("/:id", authorize("user", "admin"), getById);
+router.put("/:id", authorize("user", "admin"), updateValidate, update);
+router.delete("/:id", authorize("user", "admin"), _delete);
 
 module.exports = router;
 

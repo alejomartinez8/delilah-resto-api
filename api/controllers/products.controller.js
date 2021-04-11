@@ -5,9 +5,9 @@ const validateRequest = require("../../helpers/validateRequest");
 const authorize = require("../../middleware/authorize");
 const productService = require("../services/product.service");
 
+router.post("/", [createValidate, ...authorize()], create);
 router.get("/", getAll);
 router.get("/:id", getById);
-router.post("/", [createValidate, ...authorize()], create);
 router.put("/:id", authorize(), updateValidate, update);
 router.delete("/:id", authorize(), _delete);
 

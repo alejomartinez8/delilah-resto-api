@@ -3,14 +3,16 @@ const jwt = require("jsonwebtoken");
 
 module.exports = authorize;
 
-function authorize(roles = []) {
+function authorize() {
   return [
     // jwt decode token
     (req, res, next) => {
       const authHeader = req.headers.authorization;
 
-      if (!authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ msg: "Unauthorized no Token provided" });
+      if (!authHeader?.startsWith("Bearer ")) {
+        return res
+          .status(401)
+          .json({ msg: "Unauthorized - No token provided" });
       }
 
       const token = authHeader.substring(7, authHeader.length);
@@ -20,11 +22,12 @@ function authorize(roles = []) {
         req.user = { id: decoded.sub };
         next();
       } catch (error) {
-        return res.status(401).json({ msg: "Unauthorized Invalid" });
+        return res.status(401).json({ msg: "Unauthorized - Token Invalid" });
       }
     },
     // Verify Role
     async (req, res, next) => {
+      const roles = [...arguments];
       const user = await db.User.findByPk(req.user.id);
 
       if (!user) res.status(401).json({ msg: "Unauthorized - User no found" });

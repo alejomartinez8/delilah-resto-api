@@ -304,7 +304,7 @@ paths:
       summary: Get all users
       description: Get all user if the user request is Admin
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
@@ -312,9 +312,33 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '400':
+        401:
+          description: Unauthorized
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Unauthorized - No token provided
+        400:
           description: Invalid status value
           content: {}
+      security:
+        - token: []
+  /users/getUser:
+    get:
+      tags:
+        - users
+      summary: Get profile user logged
+      responses:  
+        200:
+          description: successful operation
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
       security:
         - token: []
   '/users/{userId}':
@@ -322,23 +346,23 @@ paths:
       tags:
         - users
       summary: Get user by user ID
-      operationId: getUserByName
+      operationId: getUserById
       parameters:
         - name: userId
           in: path
-          description: The ID that needs to be fetched.
+          description: The ID that needs to be fetched. Only admin role can access to this route
           required: true
           schema:
             type: number
       responses:
         '200':
-          description: successful operation
+          description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid username supplied
+        '401':
+          description: Unauthorized - Role not authorized
           content: {}
         '404':
           description: User not found
