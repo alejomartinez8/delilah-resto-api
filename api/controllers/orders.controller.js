@@ -15,6 +15,7 @@ module.exports = router;
 
 function createValidate(req, res, next) {
   // TODO
+  console.log(req, res, next);
 }
 
 function create(req, res, next) {

@@ -74,7 +74,10 @@ async function update(req, res) {
   Object.assign(userDB, req.body);
   await userDB.save();
 
-  return filterPassword(userDB.get());
+  const newUser = userDB.get();
+  delete newUser.password;
+
+  return newUser;
 }
 
 // _delete
@@ -87,12 +90,6 @@ async function _delete(req, res) {
     return res.status(401).json({ msg: "Unauthorized" });
 
   return await userDB.destroy();
-}
-
-//filter password
-function filterPassword(user) {
-  const { password, ...userWithoutPassword } = user;
-  return userWithoutPassword;
 }
 
 module.exports = {

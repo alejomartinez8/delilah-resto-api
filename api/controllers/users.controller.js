@@ -96,7 +96,7 @@ function updateValidate(req, res, next) {
 function update(req, res, next) {
   userService
     .update(req, res)
-    .then(() => res.json({ msg: "Update Successfully" }))
+    .then((user) => res.json(user))
     .catch(next);
 }
 
