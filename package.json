@@ -4,7 +4,7 @@
   "description": "API delilah resto online orders",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon -e .yaml .js server"
+    "dev": "nodemon server"
   },
   "author": "Alejandro Martinez",
   "license": "ISC",
@@ -14,7 +14,6 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "express-jwt": "^6.0.0",
     "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
@@ -24,6 +23,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "colors": "^1.4.0",
     "nodemon": "^2.0.7"
   }
 }
