@@ -1,15 +1,11 @@
-const express = require("express");
-const router = express.Router();
-const Joi = require("joi");
-const validateRequest = require("../../helpers/validateRequest");
-const authorize = require("../../middleware/authorize");
-const productService = require("../services/product.service");
+/* eslint-disable no-underscore-dangle */
+const express = require('express');
 
-router.post("/", [createValidate, ...authorize()], create);
-router.get("/", getAll);
-router.get("/:id", getById);
-router.put("/:id", authorize(), updateValidate, update);
-router.delete("/:id", authorize(), _delete);
+const router = express.Router();
+const Joi = require('joi');
+const validateRequest = require('../../helpers/validateRequest');
+const authorize = require('../../middleware/authorize');
+const productService = require('../services/product.service');
 
 module.exports = router;
 
@@ -24,7 +20,7 @@ function createValidate(req, res, next) {
 function create(req, res, next) {
   productService
     .create(req.body)
-    .then(() => res.json({ msg: "Product created successfully" }))
+    .then(() => res.json({ msg: 'Product created successfully' }))
     .catch(next);
 }
 
@@ -60,6 +56,12 @@ function update(req, res, next) {
 function _delete(req, res, next) {
   productService
     ._delete(req, res)
-    .then(() => res.json({ msg: "Delete Successfully" }))
+    .then(() => res.json({ msg: 'Delete Successfully' }))
     .catch(next);
 }
+
+router.post('/', [createValidate, ...authorize()], create);
+router.get('/', getAll);
+router.get('/:id', getById);
+router.put('/:id', authorize(), updateValidate, update);
+router.delete('/:id', authorize(), _delete);

@@ -1,17 +1,11 @@
-const express = require("express");
+/* eslint-disable no-underscore-dangle */
+const express = require('express');
+
 const router = express.Router();
-const Joi = require("joi");
-const validateRequest = require("../../helpers/validateRequest");
-const authorize = require("../../middleware/authorize");
-const orderService = require("../services/order.service");
-
-router.post("/", authorize("user, admin"), createValidate, create);
-router.get("/", authorize("admin"), getAll);
-router.get("/:id", authorize("user", "admin"), getById);
-router.put("/:id", authorize("user", "admin"), updateValidate, update);
-router.delete("/:id", authorize("user", "admin"), _delete);
-
-module.exports = router;
+const Joi = require('joi');
+const validateRequest = require('../../helpers/validateRequest');
+const authorize = require('../../middleware/authorize');
+const orderService = require('../services/order.service');
 
 function createValidate(req, res, next) {
   // TODO
@@ -21,7 +15,7 @@ function createValidate(req, res, next) {
 function create(req, res, next) {
   orderService
     .create(req.body)
-    .then(() => res.json({ msg: "Order created successfully" }))
+    .then(() => res.json({ msg: 'Order created successfully' }))
     .catch(next);
 }
 
@@ -50,13 +44,21 @@ function updateValidate(req, res, next) {
 function update(req, res, next) {
   orderService
     .update(req, res)
-    .then(() => res.json({ msg: "Update order successfully" }))
+    .then(() => res.json({ msg: 'Update order successfully' }))
     .catch(next);
 }
 
 function _delete(req, res, next) {
   orderService
     ._delete(req, res)
-    .then(() => res.json({ msg: "Delete order successfully" }))
+    .then(() => res.json({ msg: 'Delete order successfully' }))
     .catch(next);
 }
+
+router.post('/', authorize('user, admin'), createValidate, create);
+router.get('/', authorize('admin'), getAll);
+router.get('/:id', authorize('user', 'admin'), getById);
+router.put('/:id', authorize('user', 'admin'), updateValidate, update);
+router.delete('/:id', authorize('user', 'admin'), _delete);
+
+module.exports = router;

@@ -1,12 +1,12 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 module.exports = function model(sequelize) {
   return sequelize.define(
-    "Product",
+    'Product',
     {
       name: { type: DataTypes.STRING, allowNull: false },
       price: { type: DataTypes.INTEGER },
     },
-    {}
+    {},
   );
 };

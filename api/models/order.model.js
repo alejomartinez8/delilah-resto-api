@@ -1,8 +1,8 @@
-const { DataTypes } = require("sequelize");
+const { DataTypes } = require('sequelize');
 
 const Order = function model(sequelize) {
   return sequelize.define(
-    "Order",
+    'Order',
     {
       productList: { type: DataTypes.STRING, allowNull: false },
       paymentType: { type: DataTypes.STRING },
@@ -13,7 +13,7 @@ const Order = function model(sequelize) {
       orderId: {},
       user: {},
     },
-    {}
+    {},
   );
 };
 

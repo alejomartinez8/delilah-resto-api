@@ -1,43 +1,44 @@
-const db = require("../../helpers/db");
+/* eslint-disable no-underscore-dangle */
+const db = require('../../helpers/db');
 
 // create
 async function create(params) {
   // Verifiy if exist
   if (await db.Product.findOne({ where: { name: params.name } })) {
-    throw "Product already exists";
+    throw new Error('Product already exists');
   }
 
-  return await db.Product.create(params);
+  return db.Product.create(params);
 }
 
 // getAll
 async function getAll() {
-  return await db.Product.findAll();
+  return db.Product.findAll();
 }
 
 // getById
 async function getById(id) {
   const productDB = await db.Product.findByPk(id);
-  if (!productDB) throw "Product not found";
+  if (!productDB) throw new Error('Product not found');
   return productDB;
 }
 
 // update
-async function update(req, res) {
+async function update(req) {
   const productDB = await getById(req.params.id);
-  if (!productDB) throw "Product not found";
+  if (!productDB) throw new Error('Product not found');
 
   Object.assign(productDB, req.body);
   await productDB.save();
-  return await productDB.get();
+  return productDB.get();
 }
 
 // _delete
-async function _delete(req, res) {
+async function _delete(req) {
   const productDB = await getById(req.params.id);
-  if (!productDB) throw "Product not found";
+  if (!productDB) throw new Error('Product not found');
 
-  return await productDB.destroy();
+  return productDB.destroy();
 }
 
 module.exports = {

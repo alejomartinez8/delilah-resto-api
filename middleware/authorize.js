@@ -1,18 +1,15 @@
-const db = require("../helpers/db");
-const jwt = require("jsonwebtoken");
+/* eslint-disable consistent-return */
+const jwt = require('jsonwebtoken');
+const db = require('../helpers/db');
 
-module.exports = authorize;
-
-function authorize() {
+function authorize(...args) {
   return [
     // jwt decode token
     (req, res, next) => {
       const authHeader = req.headers.authorization;
 
-      if (!authHeader?.startsWith("Bearer ")) {
-        return res
-          .status(401)
-          .json({ msg: "Unauthorized - No token provided" });
+      if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({ msg: 'Unauthorized - No token provided' });
       }
 
       const token = authHeader.substring(7, authHeader.length);
@@ -22,23 +19,24 @@ function authorize() {
         req.user = { id: decoded.sub };
         next();
       } catch (error) {
-        return res.status(401).json({ msg: "Unauthorized - Token Invalid" });
+        return res.status(401).json({ msg: 'Unauthorized - Token Invalid' });
       }
     },
     // Verify Role
     async (req, res, next) => {
-      const roles = [...arguments];
+      const roles = [...args];
       const user = await db.User.findByPk(req.user.id);
 
-      if (!user) res.status(401).json({ msg: "Unauthorized - User no found" });
+      if (!user) res.status(401).json({ msg: 'Unauthorized - User no found' });
 
-      if (roles.length && !roles.includes(user.role))
-        return res
-          .status(401)
-          .json({ msg: "Unauthorized - Role not authorized" });
+      if (roles.length && !roles.includes(user.role)) {
+        return res.status(401).json({ msg: 'Unauthorized - Role not authorized' });
+      }
 
       req.user = user.get();
       next();
     },
   ];
 }
+
+module.exports = authorize;

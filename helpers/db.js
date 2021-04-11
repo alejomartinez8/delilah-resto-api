@@ -1,11 +1,9 @@
-const { Sequelize } = require("sequelize");
-const mysql = require("mysql2/promise");
-const User = require("../api/models/user.model");
-const Product = require("../api/models/product.model");
+const { Sequelize } = require('sequelize');
+const mysql = require('mysql2/promise');
+const User = require('../api/models/user.model');
+const Product = require('../api/models/product.model');
 
-module.exports = db = {};
-
-dbInit();
+const db = {};
 
 async function dbInit() {
   // Create db if it doesn't already exist
@@ -17,20 +15,17 @@ async function dbInit() {
       password: process.env.DB_PASS,
     });
 
-    await connection.query(
-      `CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`
-    );
+    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
   } catch (error) {
     console.log({ error });
   }
 
   // Connect to DB
-  const sequelize = new Sequelize(
-    process.env.DB_NAME,
-    process.env.DB_USER,
-    process.env.DB_PASS,
-    { host: process.env.DB_HOST, dialect: "mysql", logging: false }
-  );
+  const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+    host: process.env.DB_HOST,
+    dialect: 'mysql',
+    logging: false,
+  });
 
   // Init Models
   db.User = User(sequelize);
@@ -43,3 +38,7 @@ async function dbInit() {
     console.error({ error });
   }
 }
+
+dbInit();
+
+module.exports = db;
