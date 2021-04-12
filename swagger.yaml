@@ -51,7 +51,13 @@ paths:
               imageUrl: https://californiaavocado.com/wp-content/uploads/2020/07/Mediterranean-Grilled-Veggie-Wrap-with-California.jpeg
         required: true
       responses:
-       401:
+        200:
+          description: Product create successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        401:
           $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
@@ -104,13 +110,11 @@ paths:
         content:
           application/json:
             schema:
-              properties:
-                name:
-                  type: string
-                  description: Updated name of the product
-                price:
-                  type: number
-                  description: Updated price of the product
+              $ref: '#/components/schemas/Product'
+            example:
+              name: Veggie avocado
+              price: 200
+              imageUrl: https://californiaavocado.com/wp-content/uploads/2020/07/Mediterranean-Grilled-Veggie-Wrap-with-California.jpeg
       responses:
         401:
           $ref: '#/components/responses/Unauthorized'

@@ -21,7 +21,7 @@ function createValidate(req, res, next) {
 function create(req, res, next) {
   productService
     .create(req.body)
-    .then(() => res.json({ msg: 'Product created successfully' }))
+    .then((product) => res.json(product))
     .catch(next);
 }
 
@@ -41,8 +41,9 @@ function getById(req, res, next) {
 
 function updateValidate(req, res, next) {
   const schema = Joi.object({
-    name: Joi.string().required(),
-    price: Joi.number().required(),
+    name: Joi.string(),
+    price: Joi.number(),
+    imageUrl: Joi.string(),
   });
   validateRequest(req, next, schema);
 }
@@ -61,8 +62,8 @@ function _delete(req, res, next) {
     .catch(next);
 }
 
-router.post('/', [createValidate, ...authorize()], create);
+router.post('/', authorize('admin'), createValidate, create);
 router.get('/', getAll);
 router.get('/:id', getById);
-router.put('/:id', authorize(), updateValidate, update);
-router.delete('/:id', authorize(), _delete);
+router.put('/:id', authorize('admin'), updateValidate, update);
+router.delete('/:id', authorize('admin'), _delete);
