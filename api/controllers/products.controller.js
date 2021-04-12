@@ -13,6 +13,7 @@ function createValidate(req, res, next) {
   const schema = Joi.object({
     name: Joi.string().required(),
     price: Joi.number().required(),
+    imageUrl: Joi.string(),
   });
   validateRequest(req, next, schema);
 }

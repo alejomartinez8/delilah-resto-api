@@ -13,14 +13,17 @@ tags:
   - name: users
     description: Operations about user
 paths:
+  ############ PRODUCTS ##############
   /products:
+    # See all products
     get:
       tags:
         - products
       summary: Finds products
       description: Get all products from Delilah Restó
+      operationId: getAll
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
@@ -28,33 +31,38 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Product'
-        '400':
+        400:
           description: Invalid status value
           content: {}
+    # Create a new product
     post:
       tags:
         - products
       summary: Create a new product
       requestBody:
-        description: Product object that needs to be added to the store
+        description: Product object that needs to be added to the store. Only admins can create new products.
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Product'
+            example:
+              name: Veggie avocado
+              price: 100
+              imageUrl: https://californiaavocado.com/wp-content/uploads/2020/07/Mediterranean-Grilled-Veggie-Wrap-with-California.jpeg
         required: true
       responses:
-        '405':
-          description: Validation exception
-          content: {}
+       401:
+          $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
   '/products/{productId}':
+    # Find product by ID
     get:
       tags:
         - products
       summary: Find product by ID
       description: Returns a single product
-      operationId: getPetById
+      operationId: getById
       parameters:
         - name: productId
           in: path
@@ -64,22 +72,26 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
-        '400':
+        400:
           description: Invalid Product ID supplied
           content: {}
-        '404':
+        404:
           description: Product not found
           content: {}
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    # Update a product
     put:
       tags:
         - products
       summary: Updates a product
+      operationId: update
       parameters:
         - name: productId
           in: path
@@ -100,16 +112,19 @@ paths:
                   type: number
                   description: Updated price of the product
       responses:
+        401:
+          $ref: '#/components/responses/Unauthorized'
         '405':
           description: Invalid input
           content: {}
       security:
         - token: []
+    # ------ Delete a product ---------
     delete:
       tags:
         - products
       summary: Deletes a product
-      operationId: deletePet
+      operationId: delete
       parameters:
         - name: productId
           in: path
@@ -119,22 +134,27 @@ paths:
             type: integer
             format: int64
       responses:
-        '400':
+        400:
           description: Invalid ID supplied
           content: {}
-        '404':
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
           description: Product not found
           content: {}
       security:
         - token: []
+  # Orders
   /orders:
+    # GetAll Orders
     get:
       tags:
         - orders
       summary: Return all orders
       description: Returns an array of orders
+      operationId: getAll
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
@@ -142,13 +162,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Order'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
+    # Place an order
     post:
       tags:
         - orders
       summary: Place an order for a product
-      operationId: placeOrder
+      operationId: create
       requestBody:
         description: order placed for purchasing the product
         content:
@@ -157,18 +180,21 @@ paths:
               $ref: '#/components/schemas/Order'
         required: true
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-        '400':
+        400:
           description: Invalid Order
           content: {}
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
   '/orders/{orderId}':
+    # Find an order
     get:
       tags:
         - orders
@@ -176,7 +202,7 @@ paths:
       description: >-
         For valid response try integer IDs with positive integer value. Other
         values will generated exceptions
-      operationId: getOrderById
+      operationId: getById
       parameters:
         - name: orderId
           in: path
@@ -186,20 +212,23 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Order'
-        '400':
+        400:
           description: Invalid ID supplied
           content: {}
-        '404':
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
           description: Order not found
           content: {}
       security:
         - token: []
+    # Delete an order
     delete:
       tags:
         - orders
@@ -207,7 +236,7 @@ paths:
       description: >-
         For valid response try integer IDs with positive integer value.        
         Negative or non-integer values will generate API errors
-      operationId: deleteOrder
+      operationId: delete
       parameters:
         - name: orderId
           in: path
@@ -218,21 +247,24 @@ paths:
             type: integer
             format: int64
       responses:
-        '400':
+        400:
           description: Invalid ID supplied
           content: {}
-        '404':
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
           description: Order not found
           content: {}
       security:
         - token: []
   /users/register:
+    # Create an user
     post:
       tags:
         - users
       summary: Create user
       description: Registration form for users
-      operationId: createUser
+      operationId: create
       requestBody:
         description: Created user object
         content:
@@ -248,7 +280,7 @@ paths:
                 password: password
         required: true
       responses:
-        '200':
+        200:
           description: Register Successfully
           content: 
             application/json:
@@ -258,15 +290,18 @@ paths:
                   msg: 
                     type: string
                     default: Register Successfully
-        '400':
+        400:
           description: Invalid
           content: {}
+        401:
+          $ref: '#/components/responses/Unauthorized'
   /users/login:
+    # Login
     post:
       tags:
         - users
       summary: Logs user into the system
-      operationId: loginUser
+      operationId: login
       requestBody:
         required: true
         description: User information
@@ -286,7 +321,7 @@ paths:
                   eamil: example@example.com
                   password: password
       responses:
-        '200':
+        200:
           description: successful operation
           content:
             application/json:
@@ -294,14 +329,16 @@ paths:
                 type: object
                 example:
                   token: jwt
-        '400':
+        400:
           description: Invalid username/password supplied
           content: {}
   /users:
+    # Get all users
     get:
       tags:
         - users
       summary: Get all users
+      operationId: getAll
       description: Get all user if the user request is Admin
       responses:
         200:
@@ -313,25 +350,19 @@ paths:
                 items:
                   $ref: '#/components/schemas/User'
         401:
-          description: Unauthorized
-          content: 
-            application/json:
-              schema:
-                type: object
-                properties:
-                  msg:
-                    type: string
-                    example: Unauthorized - No token provided
+          $ref: '#/components/responses/Unauthorized'
         400:
           description: Invalid status value
           content: {}
       security:
         - token: []
   /users/getUser:
+    # Get user
     get:
       tags:
         - users
       summary: Get profile user logged
+      operationId: getUser
       responses:  
         200:
           description: successful operation
@@ -339,14 +370,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
   '/users/{userId}':
+    # Get and user by ID
     get:
       tags:
         - users
       summary: Get user by user ID
-      operationId: getUserById
+      operationId: getById
       parameters:
         - name: userId
           in: path
@@ -355,26 +389,26 @@ paths:
           schema:
             type: number
       responses:
-        '200':
+        200:
           description: Successful operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '401':
-          description: Unauthorized - Role not authorized
-          content: {}
-        '404':
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
           description: User not found
           content: {}
       security:
         - token: []
+    # Update user
     put:
       tags:
         - users
       summary: Updated user
       description: This can only be done by the logged in user.
-      operationId: updateUser
+      operationId: update
       parameters:
         - name: userId
           in: path
@@ -390,26 +424,29 @@ paths:
               $ref: '#/components/schemas/User'
         required: true
       responses:
-        '200':
+        200:
           description: User updtaded successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        '400':
-          description: Invalid user supplied
+        400:
+          description: Invalid user ID supplied
           content: {}
-        '404':
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
           description: User not found
           content: {}
       security:
         - token: []
+    # Delete users
     delete:
       tags:
         - users
       summary: Delete user
       description: This can only be done by the logged in user.
-      operationId: deleteUser
+      operationId: delete
       parameters:
         - name: userId
           in: path
@@ -418,14 +455,10 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        200:
           description: User deleted successfully
-        '400':
-          description: Invalid username supplied
-          content: {}
-        '404':
-          description: User not found
-          content: {}
+        401:
+          $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
 # Components
@@ -498,13 +531,31 @@ components:
           type: string
           example: >-
             https://californiaavocado.com/wp-content/uploads/2020/07/Mediterranean-Grilled-Veggie-Wrap-with-California.jpeg
-
-
+  
   # Security Schemes
   securitySchemes:
     token:
       type: http
       scheme: bearer
       bearerFormat: JWT
+      description: Token JWT authorization
+
+  # Respones
+  responses:
+    Unauthorized:
+      description: Unauthorized error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              msg:
+                type: string
+                example: Unauthorized - No token provided
+        
+  
+      
+  
+ 
 
             

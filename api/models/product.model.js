@@ -6,6 +6,7 @@ module.exports = function model(sequelize) {
     {
       name: { type: DataTypes.STRING, allowNull: false },
       price: { type: DataTypes.INTEGER },
+      imageUrl: { type: DataTypes.STRING },
     },
     {},
   );

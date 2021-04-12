@@ -4,9 +4,9 @@
   "description": "API delilah resto online orders",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server",
+    "dev": "nodemon -e js,yaml,json server",
     "lint": "eslint --ignore-path .gitignore .",
-    "precommit": "eslint --ignore-path .gitignore ."
+    "prepare": "husky install"
   },
   "author": "Alejandro Martinez",
   "license": "ISC",
