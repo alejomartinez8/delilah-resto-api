@@ -5,6 +5,7 @@ info:
   version: 1.0.0
 servers:
   - url: 'http://localhost:4000'
+  - url: 'https://delilah-resto-api-am.herokuapp.com/'
 tags:
   - name: products
     description: Everything about your Products
