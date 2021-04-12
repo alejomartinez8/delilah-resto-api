@@ -4,6 +4,7 @@
   "description": "API delilah resto online orders",
   "main": "server.js",
   "scripts": {
+    "start": "node server",
     "dev": "nodemon -e js,yaml,json server",
     "lint": "eslint --ignore-path .gitignore .",
     "prepare": "husky install"
