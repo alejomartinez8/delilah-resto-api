@@ -16,10 +16,6 @@ app.use(cookieParser());
 app.use(cors());
 
 // api routes
-app.use('/', (req, res) => {
-  res.send('Delilah-resto-API');
-});
-
 app.use('/users', usersController);
 app.use('/products', productsController);
 
