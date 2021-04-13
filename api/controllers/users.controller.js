@@ -54,16 +54,16 @@ function getAll(req, res, next) {
     .catch(next);
 }
 
-function getUser(req, res, next) {
+function getProfile(req, res, next) {
   userService
-    .getUser(req.user.id)
+    .getProfile(req.user.id)
     .then((user) => res.json(user))
     .catch(next);
 }
 
 function getById(req, res, next) {
   userService
-    .getUser(req.params.id)
+    .getProfile(req.params.id)
     .then((user) => res.json(user))
     .catch(next);
 }
@@ -102,7 +102,7 @@ function _delete(req, res, next) {
 router.post('/login', loginValidate, login);
 router.post('/register', registerValidate, register);
 router.get('/', authorize('admin'), getAll);
-router.get('/getUser', authorize('admin', 'user'), getUser);
+router.get('/getProfile', authorize('admin', 'user'), getProfile);
 router.get('/:id', authorize('admin'), getById);
 router.put('/:id', authorize(), updateValidate, update);
 router.delete('/:id', authorize(), _delete);

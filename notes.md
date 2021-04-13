@@ -64,7 +64,7 @@ Model:
 
 - [ ] POST /users/login -> Login (All)
 - [ ] POST /users/register -> Register (All)
-- [ ] GET /users/getUser -> Get self info (All)
+- [ ] GET /users/getProfile -> Get self info (All)
 - [ ] GET /users/getById/:id -> Infor User by Id (Only Admin)
 - [ ] GET /users -> Get all (Only Admin)
 - [ ] PUT /users/:id -> Update User (Only self or Admin)

@@ -38,8 +38,8 @@ async function getAll() {
   return db.User.findAll();
 }
 
-// getUser
-async function getUser(id) {
+// getProfile
+async function getProfile(id) {
   const userDB = await db.User.findByPk(id);
   if (!userDB) throw new Error('User not found');
   return userDB;
@@ -47,7 +47,7 @@ async function getUser(id) {
 
 // update
 async function update(req, res) {
-  const userDB = await getUser(req.params.id);
+  const userDB = await getProfile(req.params.id);
   if (!userDB) throw new Error('User not found');
 
   // Only can modify to self or admin role
@@ -86,7 +86,7 @@ async function update(req, res) {
 
 // _delete
 async function _delete(req, res) {
-  const userDB = await getUser(req.params.id);
+  const userDB = await getProfile(req.params.id);
   if (!userDB) throw new Error('User not found');
 
   // Only can modify to self or admin role
@@ -101,7 +101,7 @@ module.exports = {
   login,
   create,
   getAll,
-  getUser,
+  getProfile,
   update,
   _delete,
 };

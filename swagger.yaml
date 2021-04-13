@@ -361,13 +361,13 @@ paths:
           content: {}
       security:
         - token: []
-  /users/getUser:
+  /users/getProfile:
     # Get user
     get:
       tags:
         - users
       summary: Get profile user logged
-      operationId: getUser
+      operationId: getProfile
       responses:  
         200:
           description: successful operation
