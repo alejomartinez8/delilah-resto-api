@@ -4,12 +4,12 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const morgan = require('morgan');
+const morgamorganMiddleware = require('./helpers/morgan');
 const errorHandler = require('./middleware/errorHandler');
 const usersController = require('./api/controllers/users.controller');
 const productsController = require('./api/controllers/products.controller');
 
-app.use(morgan('combined'));
+app.use(morgamorganMiddleware);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());

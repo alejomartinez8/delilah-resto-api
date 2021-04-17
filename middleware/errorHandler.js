@@ -1,12 +1,6 @@
-function errorHandler(err, req, res) {
-  console.log(('Error:', err));
-
-  if (typeof err === 'string') {
-    const is404 = err.toLowerCase().endsWith('not found');
-    const statusCode = is404 ? 404 : 400;
-    return res.status(statusCode).json({ message: err });
-  }
-  return res.status(500).json({ msg: err.message });
+/* eslint-disable no-unused-vars */
+function errorHandler(err, req, res, next) {
+  return res.status(400).send({ error: err.message });
 }
 
 module.exports = errorHandler;

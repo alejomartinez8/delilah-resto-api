@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   - url: 'https://delilah-resto-api-am.herokuapp.com/'
-  # - url: 'http://localhost:4000'
+  - url: 'http://localhost:4000'
 tags:
   - name: products
     description: Everything about your Products
@@ -296,8 +296,15 @@ paths:
                     type: string
                     default: Register Successfully
         400:
-          description: Invalid
-          content: {}
+          description: 	Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    default: "You are already registered"
         401:
           $ref: '#/components/responses/Unauthorized'
   /users/login:
