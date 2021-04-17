@@ -9,7 +9,9 @@ const userService = require('../services/user.service');
 
 function loginValidate(req, res, next) {
   const schema = Joi.object({
-    username: Joi.string().required(),
+    username: Joi.alternatives()
+      .try(Joi.string().email(), Joi.string().alphanum().min(3).max(30))
+      .required(),
     password: Joi.string().required(),
   });
 

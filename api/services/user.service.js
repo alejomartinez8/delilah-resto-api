@@ -5,15 +5,21 @@ const db = require('../../helpers/db');
 
 // login
 async function login({ username, password }) {
-  const user = await db.User.scope('withPassword').findOne({
+  let userDB = await db.User.scope('withPassword').findOne({
     where: { username },
   });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!userDB) {
+    userDB = await db.User.scope('withPassword').findOne({
+      where: { email: username },
+    });
+  }
+
+  if (!userDB || !(await bcrypt.compare(password, userDB.password))) {
     throw new Error('Username or password is incorrect');
   }
 
-  const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ sub: userDB.id }, process.env.JWT_SECRET, {
     expiresIn: '7d',
   });
 
@@ -92,6 +98,10 @@ async function _delete(req, res) {
   // Only can modify to self or admin role
   if (req.user.id !== userDB.id && req.user.role === 'user') {
     return res.status(401).json({ msg: 'Unauthorized' });
+  }
+
+  if (userDB.role === 'admin') {
+    return res.status(401).send({ error: 'No delete admin user please' });
   }
 
   return userDB.destroy();

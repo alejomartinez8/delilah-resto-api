@@ -306,7 +306,7 @@ paths:
                   password: password
               email:
                 value:
-                  eamil: example@example.com
+                  username: example@example.com
                   password: password
       responses:
         200:
