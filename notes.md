@@ -14,10 +14,10 @@ Model:
 ### Endpoints
 
 - [x] GET /products -> Get all (All)
-- [ ] GET /products/:id -> Get Product (All)
-- [ ] POST /products/create -> Create product (Admin)
-- [ ] PUT /products/:id -> Update product (Admin)
-- [ ] DELETE /products/:id -> Delete (Admin)
+- [x] GET /products/:id -> Get Product (All)
+- [x] POST /products/create -> Create product (Admin)
+- [x] PUT /products/:id -> Update product (Admin)
+- [x] DELETE /products/:id -> Delete (Admin)
 
 ## Orders
 
@@ -62,10 +62,10 @@ Model:
 
 ### Endpoints:
 
-- [ ] POST /users/login -> Login (All)
-- [ ] POST /users/register -> Register (All)
-- [ ] GET /users/getProfile -> Get self info (All)
-- [ ] GET /users/getById/:id -> Infor User by Id (Only Admin)
-- [ ] GET /users -> Get all (Only Admin)
-- [ ] PUT /users/:id -> Update User (Only self or Admin)
-- [ ] DELETE /users/:id -> Delete User (Only self or Admin)
+- [x] POST /users/login -> Login (All)
+- [x] POST /users/register -> Register (All)
+- [x] GET /users/getProfile -> Get self info (All)
+- [x] GET /users/getById/:id -> Infor User by Id (Only Admin)
+- [x] GET /users -> Get all (Only Admin)
+- [x] PUT /users/:id -> Update User (Only self or Admin)
+- [x] DELETE /users/:id -> Delete User (Only self or Admin)
