@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -97,11 +98,11 @@ async function _delete(req, res) {
 
   // Only can modify to self or admin role
   if (req.user.id !== userDB.id && req.user.role === 'user') {
-    return res.status(401).json({ msg: 'Unauthorized' });
+    return res.status(401).send({ error: 'Unauthorized' });
   }
 
   if (userDB.role === 'admin') {
-    return res.status(401).send({ error: 'No delete admin user please' });
+    return res.status(401).send({ error: 'No delete admin users please' });
   }
 
   return userDB.destroy();

@@ -9,7 +9,7 @@ function authorize(...args) {
       const authHeader = req.headers.authorization;
 
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ msg: 'Unauthorized - No token provided' });
+        return res.status(401).send({ error: 'Unauthorized - No token' });
       }
 
       const token = authHeader.substring(7, authHeader.length);
@@ -19,7 +19,7 @@ function authorize(...args) {
         req.user = { id: decoded.sub };
         next();
       } catch (error) {
-        return res.status(401).json({ msg: 'Unauthorized - Token Invalid' });
+        return res.status(401).send({ error: 'Unauthorized - Token Invalid' });
       }
     },
     // Verify Role
@@ -27,10 +27,12 @@ function authorize(...args) {
       const roles = [...args];
       const user = await db.User.findByPk(req.user.id);
 
-      if (!user) res.status(401).json({ msg: 'Unauthorized - User no found' });
+      if (!user) {
+        return res.status(401).send({ error: 'Unauthorized - User no found' });
+      }
 
       if (roles.length && !roles.includes(user.role)) {
-        return res.status(401).json({ msg: 'Unauthorized - Role not authorized' });
+        return res.status(401).send({ error: 'Unauthorized - Role not authorized' });
       }
 
       req.user = user.get();
