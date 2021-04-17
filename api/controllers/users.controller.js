@@ -74,15 +74,13 @@ function updateValidate(req, res, next) {
   const schema = Joi.object({
     username: Joi.string().alphanum().min(3).max(30),
     names: Joi.string().required(),
-    email: Joi.string()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: ['com', 'net'] },
-      })
-      .required(),
-    phoneNumber: Joi.string(),
+    email: Joi.string().email({
+      minDomainSegments: 2,
+      tlds: { allow: ['com', 'net'] },
+    }),
+    phone: Joi.string(),
     address: Joi.string(),
-    password: Joi.string().min(6).required(),
+    password: Joi.string().min(6),
   });
   validateRequest(req, next, schema);
 }

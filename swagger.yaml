@@ -257,6 +257,7 @@ paths:
       description: Registration form for users
       operationId: create
       requestBody:
+        required: true
         description: Created user object
         content:
           application/json:
@@ -269,7 +270,6 @@ paths:
                 address: Medellin
                 phone: 555 555 555
                 password: password
-        required: true
       responses:
         200:
           description: Register Successfully
@@ -404,12 +404,19 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Updated user object
+        required: true
+        description: Created user object
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
-        required: true
+            example:
+                username: username
+                names: FirstName LastName
+                email: example@example.com
+                address: Medellin
+                phone: 333 333 333
+                password: password
       responses:
         200:
           description: User updtaded successfully
