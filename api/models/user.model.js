@@ -4,13 +4,41 @@ module.exports = function model(sequelize) {
   return sequelize.define(
     'User',
     {
-      username: { type: DataTypes.STRING, allowNull: false },
-      names: { type: DataTypes.STRING, allowNull: false },
-      email: { type: DataTypes.STRING, allowNull: false },
-      phone: { type: DataTypes.STRING, allowNull: false },
-      address: { type: DataTypes.STRING, allowNull: false },
-      password: { type: DataTypes.STRING, allowNull: false },
-      role: { type: DataTypes.STRING, allowNull: false, defaultValue: 'user' },
+      username: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      names: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      phone: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      role: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: 'user',
+      },
     },
     {
       defaultScope: {

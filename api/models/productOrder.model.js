@@ -2,14 +2,10 @@ const { DataTypes } = require('sequelize');
 
 module.exports = function model(sequelize) {
   return sequelize.define(
-    'Order',
+    'Product_Orders',
     {
-      paymentType: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      paymentValue: {
-        type: DataTypes.INTEGER,
+      quantity: {
+        type: DataTypes.NUMBER,
         allowNull: false,
       },
     },

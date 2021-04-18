@@ -2,6 +2,8 @@ const { Sequelize } = require('sequelize');
 const mysql = require('mysql2/promise');
 const User = require('../api/models/user.model');
 const Product = require('../api/models/product.model');
+const Order = require('../api/models/order.model');
+// const ProductOrders = require('../api/models/productOrder.model');
 
 const db = {};
 
@@ -24,12 +26,22 @@ async function dbInit() {
   const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_HOST,
     dialect: 'mysql',
-    logging: false,
+    // logging: false,
   });
 
   // Init Models
   db.User = User(sequelize);
   db.Product = Product(sequelize);
+  db.Order = Order(sequelize);
+  // db.ProductOrders = ProductOrders(sequelize);
+
+  db.Product.belongsToMany(db.Order, {
+    through: 'Product_Orders',
+  });
+
+  db.Order.belongsToMany(db.Product, {
+    through: 'Product_Orders',
+  });
 
   // Sync
   try {
