@@ -3,8 +3,8 @@ const express = require('express');
 
 const router = express.Router();
 const Joi = require('joi');
-const validateRequest = require('../../helpers/validateRequest');
-const authorize = require('../../middleware/authorize');
+const validateRequest = require('../middleware/validateRequest');
+const authorize = require('../middleware/authorize');
 const orderService = require('../services/order.service');
 
 function create(req, res, next) {
@@ -51,7 +51,7 @@ function _delete(req, res, next) {
 }
 
 router.post('/create', create);
-router.get('/', authorize('admin'), getAll);
+router.get('/', getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.put('/:id', authorize('user', 'admin'), updateValidate, update);
 router.delete('/:id', authorize('user', 'admin'), _delete);

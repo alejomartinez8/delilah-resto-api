@@ -4,39 +4,37 @@ const db = require('../models');
 // create
 async function create(params) {
   // Verifiy if exist
+
   console.log(params);
 
-  const saveOrder = await db.Order.create(params, { include: [{ association: db.Order.User }] });
+  const savedOrder = await db.Order.create(params);
 
-  // if (params.products) {
-  //   params.products.forEach(async (element) => {
-  //     const product = await db.Product.findByPk(element.id);
+  // params.products.forEach(async (item) => {
+  //   const product = await db.Product.findByPk(item.id);
+  //   if (!product) {
+  //     throw new Error('Error product');
+  //   }
 
-  //     if (!product) {
-  //       return new Error('Product Invalid');
-  //     }
+  //   // Create a dictionary with which to create the ProductOrder
+  //   const po = {
+  //     orderId: savedOrder.id,
+  //     productId: item.id,
+  //     quantity: item.quantity,
+  //   };
 
-  //     const productOrder = {
-  //       orderId: saveOrder.id,
-  //       productId: product.id,
-  //     };
+  //   // Create and save a productOrder
+  //   const savedProductOrder = await db.ProductOrder.create(po, { w: 1 }, { returning: true });
+  //   console.log(savedProductOrder);
+  // });
 
-  //     const saveProductOrder = await db.ProductOrder.create(
-  //       productOrder,
-  //       { w: 1 },
-  //       { returning: true },
-  //     );
-
-  //     console.log({ saveProductOrder });
-  //   });
-  // }
-
-  return saveOrder;
+  return savedOrder;
 }
 
 // getAll
 async function getAll() {
-  return db.Order.findAll();
+  return db.Order.findAll({
+    include: [db.Product],
+  });
 }
 
 // getById
