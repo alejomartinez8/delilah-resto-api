@@ -7,15 +7,10 @@ const validateRequest = require('../../helpers/validateRequest');
 const authorize = require('../../middleware/authorize');
 const orderService = require('../services/order.service');
 
-function createValidate(req, res, next) {
-  // TODO
-  console.log(req, res, next);
-}
-
 function create(req, res, next) {
   orderService
     .create(req.body)
-    .then(() => res.json({ msg: 'Order created successfully' }))
+    .then((order) => res.json(order))
     .catch(next);
 }
 
@@ -55,7 +50,7 @@ function _delete(req, res, next) {
     .catch(next);
 }
 
-router.post('/', authorize('user, admin'), createValidate, create);
+router.post('/create', create);
 router.get('/', authorize('admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.put('/:id', authorize('user', 'admin'), updateValidate, update);

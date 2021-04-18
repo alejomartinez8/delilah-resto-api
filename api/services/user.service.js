@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const db = require('../../helpers/db');
+const db = require('../models');
 
 // login
 async function login({ username, password }) {

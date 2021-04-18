@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
-const db = require('../helpers/db');
+const db = require('../api/models');
 
 function authorize(...args) {
   return [

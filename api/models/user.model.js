@@ -1,41 +1,39 @@
-const { DataTypes } = require('sequelize');
-
-module.exports = function model(sequelize) {
-  return sequelize.define(
+module.exports = (sequelize, Sequelize) => {
+  const User = sequelize.define(
     'User',
     {
       username: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
       names: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       email: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
       phone: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       address: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       password: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       role: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: 'user',
       },
@@ -51,4 +49,6 @@ module.exports = function model(sequelize) {
       },
     },
   );
+
+  return User;
 };

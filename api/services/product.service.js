@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-const db = require('../../helpers/db');
+const db = require('../models');
 
 // create
 async function create(params) {

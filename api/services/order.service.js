@@ -1,14 +1,37 @@
 /* eslint-disable no-underscore-dangle */
-const db = require('../../helpers/db');
+const db = require('../models');
 
 // create
 async function create(params) {
   // Verifiy if exist
-  if (await db.Order.findOne({ where: { name: params.name } })) {
-    throw new Error('Order already exists');
-  }
+  console.log(params);
 
-  return db.Order.create(params);
+  const saveOrder = await db.Order.create(params, { include: [{ association: db.Order.User }] });
+
+  // if (params.products) {
+  //   params.products.forEach(async (element) => {
+  //     const product = await db.Product.findByPk(element.id);
+
+  //     if (!product) {
+  //       return new Error('Product Invalid');
+  //     }
+
+  //     const productOrder = {
+  //       orderId: saveOrder.id,
+  //       productId: product.id,
+  //     };
+
+  //     const saveProductOrder = await db.ProductOrder.create(
+  //       productOrder,
+  //       { w: 1 },
+  //       { returning: true },
+  //     );
+
+  //     console.log({ saveProductOrder });
+  //   });
+  // }
+
+  return saveOrder;
 }
 
 // getAll
