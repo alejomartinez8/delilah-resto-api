@@ -1,10 +1,12 @@
 require('dotenv').config();
 const express = require('express');
-
-const app = express();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const morgamorganMiddleware = require('./helpers/morgan');
+const morgan = require('morgan');
+const chalk = require('chalk');
+
+const app = express();
+
 const errorHandler = require('./middleware/errorHandler');
 const db = require('./models');
 const usersController = require('./controllers/users.controller');
@@ -12,7 +14,7 @@ const productsController = require('./controllers/products.controller');
 const ordersController = require('./controllers/orders.controller');
 
 // middlewares
-app.use(morgamorganMiddleware);
+app.use(morgan(chalk`:method :url {green :status} :response-time ms - :res[content-length]`));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cookieParser());
@@ -31,13 +33,14 @@ app.use(errorHandler);
 
 // db connection
 db.sequelize
-  .sync({ alter: true })
+  .sync()
   .then(() => {
-    console.log('Drop and re-sync db.');
+    console.log(chalk.yellow('Drop and re-sync db'));
     // start server
     const port = process.env.PORT || 4000;
+
     app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
+      console.log(chalk.green(`******* Server listening on port ${port} ******`));
     });
   })
   .catch((error) => console.error(error));

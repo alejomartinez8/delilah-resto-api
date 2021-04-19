@@ -11,5 +11,7 @@ module.exports = {
   },
   rules: {
     'prettier/prettier': 'error',
+    'lines-around-directive:': 0,
+    strict: 0,
   },
 };

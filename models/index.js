@@ -1,59 +1,47 @@
-require('dotenv').config();
-const mysql = require('mysql2/promise');
+/* eslint-disable global-require */
+/* eslint-disable no-path-concat */
+/* eslint-disable prefer-template */
+/* eslint-disable lines-around-directive */
+/* eslint-disable strict */
+/* eslint-disable import/no-dynamic-require */
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
 const Sequelize = require('sequelize');
-const User = require('./user.model');
-const Product = require('./product.model');
-const Order = require('./order.model');
-// const ProductOrder = require('./productOrder.model');
+const chalk = require('chalk');
 
-// Create DB if it doesn't already exist
-async function dbInit() {
-  try {
-    const connection = await mysql.createConnection({
-      host: process.env.DB_HOST,
-      port: process.env.DB_PORT,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASS,
-    });
-
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
-  } catch (error) {
-    console.log({ error });
-  }
-}
-
-dbInit();
-
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-  host: process.env.DB_HOST,
-  dialect: 'mysql',
-  //   logging: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-});
-
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
-db.Sequelize = Sequelize;
+let sequelize;
+
+config.logging = (...msg) => console.log(chalk.cyan(msg));
+
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
+
+fs.readdirSync(__dirname)
+  .filter((file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js')
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
+
+Object.keys(db).forEach((modelName) => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
+console.log(db);
+
 db.sequelize = sequelize;
-
-db.User = User(sequelize);
-db.Product = Product(sequelize);
-db.Order = Order(sequelize);
-// db.ProductOrder = ProductOrder(sequelize);
-
-// db.Product.belongsToMany(db.Order, {
-//   through: 'ProductOrder',
-//   as: 'orders',
-// });
-
-// db.Order.belongsToMany(db.Product, {
-//   through: 'ProductOrder',
-//   as: 'products',
-// });
+db.Sequelize = Sequelize;
 
 module.exports = db;

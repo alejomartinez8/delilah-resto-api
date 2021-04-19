@@ -28,14 +28,14 @@ function create(req, res, next) {
 function getAll(req, res, next) {
   productService
     .getAll()
-    .then((users) => res.json(users))
+    .then((products) => res.json(products))
     .catch(next);
 }
 
 function getById(req, res, next) {
   productService
     .getById(req.params.id)
-    .then((user) => res.json(user))
+    .then((product) => res.json(product))
     .catch(next);
 }
 

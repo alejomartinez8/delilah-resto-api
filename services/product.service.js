@@ -13,7 +13,8 @@ async function create(params) {
 
 // getAll
 async function getAll() {
-  return db.Product.findAll();
+  const products = await db.Product.findAll();
+  return products;
 }
 
 // getById
