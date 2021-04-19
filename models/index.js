@@ -13,15 +13,16 @@ const chalk = require('chalk');
 
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require('../config/config')[env];
+
 const db = {};
 
 let sequelize;
 
 config.logging = (...msg) => console.log(chalk.cyan(msg));
 
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+if (config.DATABASE_URL) {
+  sequelize = new Sequelize(process.env[config.DATABASE_URL], config);
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }

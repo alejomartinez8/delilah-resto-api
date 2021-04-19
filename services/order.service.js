@@ -2,49 +2,90 @@
 const db = require('../models');
 
 // create
-async function create(params) {
-  // Verifiy if exist
+async function create(req) {
+  // Create and save the order
+  const savedOrder = await db.Order.create(req.body, { w: 1 }, { returning: true });
 
-  console.log(params);
+  console.log({ savedOrder });
 
-  const savedOrder = await db.Order.create(params);
+  // Loop through all the items in req.products
+  req.body.products.forEach(async (item) => {
+    // Search for the product with the givenId and make sure it exists.
+    // If it doesn't, respond with status 400.
+    const product = await db.Product.findByPk(item.id);
+    if (!product) {
+      throw new Error("Product doesn't exist");
+    }
 
-  // params.products.forEach(async (item) => {
-  //   const product = await db.Product.findByPk(item.id);
-  //   if (!product) {
-  //     throw new Error('Error product');
-  //   }
+    // Create a dictionary with which to create the ProductOrder
+    const po = {
+      orderId: savedOrder.id,
+      productId: item.id,
+      quantity: item.quantity,
+    };
 
-  //   // Create a dictionary with which to create the ProductOrder
-  //   const po = {
-  //     orderId: savedOrder.id,
-  //     productId: item.id,
-  //     quantity: item.quantity,
-  //   };
+    // Create and save a productOrder
+    const savedProductOrder = await db.ProductOrder.create(po, { w: 1 }, { returning: true });
+    console.log(savedProductOrder);
+  });
 
-  //   // Create and save a productOrder
-  //   const savedProductOrder = await db.ProductOrder.create(po, { w: 1 }, { returning: true });
-  //   console.log(savedProductOrder);
-  // });
-
+  // If everything goes well, respond with the order
   return savedOrder;
 }
 
 // getAll
 async function getAll() {
-  return db.Order.findAll({
-    include: [db.Product],
+  const allOrders = await db.Order.findAll({
+    // Make sure to include the products
+    include: [
+      {
+        model: db.Product,
+        as: 'products',
+        required: false,
+        // Pass in the Product attributes that you want to retrieve
+        attributes: ['id', 'name'],
+        through: {
+          // This block of code allows you to retrieve the properties of the join table
+          model: db.ProductOrder,
+          as: 'productOrders',
+          attributes: ['quantity'],
+        },
+      },
+    ],
   });
+
+  console.log({ allOrders });
+
+  // If everything goes well respond with the orders
+  return allOrders;
 }
 
 // getById
 async function getById(id) {
-  const orderDB = await db.Order.findByPk(id);
+  const orderDB = await db.Order.findByPk(id, {
+    // Make sure to include the products
+    include: [
+      {
+        model: db.Product,
+        as: 'products',
+        required: false,
+        // Pass in the Product attributes that you want to retrieve
+        attributes: ['id', 'name'],
+        through: {
+          // This block of code allows you to retrieve the properties of the join table
+          model: db.ProductOrder,
+          as: 'productOrders',
+          attributes: ['quantity'],
+        },
+      },
+    ],
+  });
+
   if (!orderDB) throw new Error('Order not found');
   return orderDB;
 }
 
-// update
+// update - TODO:
 async function update(req) {
   const orderDB = await getById(req.params.id);
   if (!orderDB) throw new Error('Order not found');
@@ -54,9 +95,26 @@ async function update(req) {
   return orderDB.get();
 }
 
-// _delete
+// _delete - TODO:
 async function _delete(req) {
-  const orderDB = await getById(req.params.id);
+  const orderDB = await getById(req.params.id, {
+    // Make sure to include the products
+    include: [
+      {
+        model: db.Product,
+        as: 'products',
+        required: false,
+        // Pass in the Product attributes that you want to retrieve
+        attributes: ['id', 'name'],
+        through: {
+          // This block of code allows you to retrieve the properties of the join table
+          model: db.ProductOrder,
+          as: 'productOrders',
+          attributes: ['quantity'],
+        },
+      },
+    ],
+  });
   if (!orderDB) throw new Error('Order not found');
 
   return orderDB.destroy();

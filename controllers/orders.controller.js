@@ -9,7 +9,7 @@ const orderService = require('../services/order.service');
 
 function create(req, res, next) {
   orderService
-    .create(req.body)
+    .create(req)
     .then((order) => res.json(order))
     .catch(next);
 }
@@ -51,9 +51,9 @@ function _delete(req, res, next) {
 }
 
 router.post('/create', create);
-router.get('/', getAll);
+router.get('/all', getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
-router.put('/:id', authorize('user', 'admin'), updateValidate, update);
-router.delete('/:id', authorize('user', 'admin'), _delete);
+router.put('/update/:id', authorize('user', 'admin'), updateValidate, update);
+router.delete('/delete/:id', authorize('user', 'admin'), _delete);
 
 module.exports = router;
