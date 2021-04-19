@@ -72,7 +72,8 @@ Model:
 
 ## Sequelize CLI
 
-- `npm install -D sequelize-cli` for local use or `npm -g sequelize` to use global
+> `npm install -D sequelize-cli` for local use or
+> `npm -g sequelize` to use global
 
 ### Steps to create migrations, models and seeds
 
