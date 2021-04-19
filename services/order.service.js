@@ -3,6 +3,8 @@ const db = require('../models');
 
 // create
 async function create(req) {
+  console.log(req.body);
+
   // Create and save the order
   const savedOrder = await db.Order.create(req.body, { w: 1 }, { returning: true });
 
@@ -11,6 +13,7 @@ async function create(req) {
     // Search for the product with the givenId and make sure it exists.
     // If it doesn't, respond with status 400.
     const product = await db.Product.findByPk(item.id);
+
     if (!product) {
       throw new Error("Product doesn't exist");
     }

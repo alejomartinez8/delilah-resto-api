@@ -2,6 +2,8 @@
 
 'use strict';
 
+const { v4: uuidv4 } = require('uuid');
+
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -20,6 +22,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       username: DataTypes.STRING,
       names: DataTypes.STRING,
       email: DataTypes.STRING,
@@ -41,5 +49,11 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   );
+
+  User.beforeCreate((user) => {
+    // eslint-disable-next-line no-param-reassign
+    user.id = uuidv4();
+  });
+
   return User;
 };

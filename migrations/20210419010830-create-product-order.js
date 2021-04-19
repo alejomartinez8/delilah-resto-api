@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       productId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       orderId: {
         type: Sequelize.INTEGER,
