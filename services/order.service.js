@@ -6,8 +6,6 @@ async function create(req) {
   // Create and save the order
   const savedOrder = await db.Order.create(req.body, { w: 1 }, { returning: true });
 
-  console.log({ savedOrder });
-
   // Loop through all the items in req.products
   req.body.products.forEach(async (item) => {
     // Search for the product with the givenId and make sure it exists.
@@ -25,8 +23,7 @@ async function create(req) {
     };
 
     // Create and save a productOrder
-    const savedProductOrder = await db.ProductOrder.create(po, { w: 1 }, { returning: true });
-    console.log(savedProductOrder);
+    await db.ProductOrder.create(po, { w: 1 }, { returning: true });
   });
 
   // If everything goes well, respond with the order
@@ -62,6 +59,7 @@ async function getAll() {
 
 // getById
 async function getById(id) {
+  console.log({ id });
   const orderDB = await db.Order.findByPk(id, {
     // Make sure to include the products
     include: [

@@ -174,11 +174,18 @@ paths:
       operationId: create
       requestBody:
         description: order placed for purchasing the product
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Order'
-        required: true
+            example:
+                properties:
+                  orderDate: "2021-04-19T05:47:18.470Z"
+                  status: new
+                  paymentType: Cash
+                  userId: 1
+                  products: [ {id: 1, quantity: 2}, {id: 2, quantity: 3},]             
       responses:
         200:
           description: successful operation
@@ -455,7 +462,6 @@ paths:
         - token: []
 # Components
 components:
-
   # Schemes
   schemas:
     Order:
@@ -467,8 +473,6 @@ components:
         orderDate:
           type: string
           format: date-time
-        productList:
-          type: string
         paymentType:
           type: string
           enum:
@@ -488,6 +492,10 @@ components:
         userId:
           type: integer
           format: int64
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
     User:
       type: object
       properties:

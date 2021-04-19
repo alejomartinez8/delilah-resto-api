@@ -50,9 +50,9 @@ function _delete(req, res, next) {
     .catch(next);
 }
 
-router.post('/create', create);
-router.get('/all', getAll);
+router.get('/', getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
+router.post('/create', create);
 router.put('/update/:id', authorize('user', 'admin'), updateValidate, update);
 router.delete('/delete/:id', authorize('user', 'admin'), _delete);
 
