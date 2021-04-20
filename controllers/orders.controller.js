@@ -28,13 +28,13 @@ function getById(req, res, next) {
     .catch(next);
 }
 
-function updateValidate(req, res, next) {
-  const schema = Joi.object({
-    name: Joi.string().required(),
-    price: Joi.number().required(),
-  });
-  validateRequest(req, next, schema);
-}
+// function updateValidate(req, res, next) {
+//   const schema = Joi.object({
+//     name: Joi.string().required(),
+//     price: Joi.number().required(),
+//   });
+//   validateRequest(req, next, schema);
+// }
 
 function update(req, res, next) {
   orderService
@@ -50,10 +50,10 @@ function _delete(req, res, next) {
     .catch(next);
 }
 
-router.get('/', getAll);
+router.get('/all', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
-router.post('/create', create);
-router.put('/update/:id', authorize('user', 'admin'), updateValidate, update);
+router.post('/create', authorize('user', 'admin'), create);
+router.put('/update/:id', authorize('user', 'admin'), update);
 router.delete('/delete/:id', authorize('user', 'admin'), _delete);
 
 module.exports = router;

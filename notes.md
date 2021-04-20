@@ -103,10 +103,8 @@ Model:
 9. To load data to DB use
    > `npx sequelize-cli db:seed:all`
 10. To migrate the tables to external database use
-
-    > ` npx sequelize-cli db:migrate --url 'mysql://root:password@mysql_host.com/database_name'`
-
-    > `npx sequelize-cli db:seed:all --url 'mysql://root:password@mysql_host.com/database_name'`
+    $ `npx sequelize-cli db:migrate --url 'mysql://root:password@mysql_host.com/database_name'`
+    $ `npx sequelize-cli db:seed:all --url 'mysql://root:password@mysql_host.com/database_name'`
 
 ### Commands used
 

@@ -1,89 +1,89 @@
 /* eslint-disable no-underscore-dangle */
 const db = require('../models');
 
-// create
-async function create(req) {
-  console.log(req.body);
+const include = [
+  {
+    model: db.Product,
+    as: 'products',
+    required: false,
+    // Pass in the Product attributes that you want to retrieve
+    attributes: ['id', 'name'],
+    through: {
+      // This block of code allows you to retrieve the properties of the join table
+      model: db.ProductOrder,
+      as: 'productOrders',
+      attributes: ['quantity'],
+    },
+  },
+  {
+    model: db.User,
+    attributes: ['id', 'names', 'address'],
+  },
+];
 
-  // Create and save the order
-  const savedOrder = await db.Order.create(req.body, { w: 1 }, { returning: true });
-
-  // Loop through all the items in req.products
-  req.body.products.forEach(async (item) => {
-    // Search for the product with the givenId and make sure it exists.
-    // If it doesn't, respond with status 400.
-    const product = await db.Product.findByPk(item.id);
-
-    if (!product) {
-      throw new Error("Product doesn't exist");
-    }
-
-    // Create a dictionary with which to create the ProductOrder
-    const po = {
-      orderId: savedOrder.id,
-      productId: item.id,
-      quantity: item.quantity,
-    };
-
-    // Create and save a productOrder
-    await db.ProductOrder.create(po, { w: 1 }, { returning: true });
+// getById
+async function getById(id) {
+  const orderDB = await db.Order.findByPk(id, {
+    include,
   });
 
-  // If everything goes well, respond with the order
-  return savedOrder;
+  if (!orderDB) throw new Error('Order not found');
+  return orderDB;
 }
+
+// create
+const create = async (req) => {
+  let newOrder = req.body;
+
+  // Add the userId
+  if (req.user.role === 'user' || !req.body.userId) {
+    newOrder.userId = req.user.id;
+  }
+
+  // Verify the userId it's no void
+  if (!newOrder.userId) {
+    throw new Error('Please add an userId to create the order');
+  }
+
+  // Create and save the order
+  const savedOrder = await db.Order.create(newOrder, { w: 1 }, { returning: true });
+
+  const promisesSubtotal = await req.body.products.map(async (item) => {
+    const productDB = await db.Product.findByPk(item.id);
+
+    await db.ProductOrder.create(
+      {
+        orderId: savedOrder.id,
+        productId: item.id,
+        quantity: item.quantity,
+      },
+      { w: 1 },
+      { returning: true },
+    );
+
+    return productDB.price * item.quantity;
+  });
+
+  const subtotals = await Promise.all(promisesSubtotal);
+
+  savedOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
+
+  await savedOrder.save();
+  newOrder = await getById(savedOrder.id, { include });
+  return newOrder;
+};
 
 // getAll
 async function getAll() {
   const allOrders = await db.Order.findAll({
     // Make sure to include the products
-    include: [
-      {
-        model: db.Product,
-        as: 'products',
-        required: false,
-        // Pass in the Product attributes that you want to retrieve
-        attributes: ['id', 'name'],
-        through: {
-          // This block of code allows you to retrieve the properties of the join table
-          model: db.ProductOrder,
-          as: 'productOrders',
-          attributes: ['quantity'],
-        },
-      },
-    ],
+    include,
   });
 
   console.log({ allOrders });
 
   // If everything goes well respond with the orders
   return allOrders;
-}
-
-// getById
-async function getById(id) {
-  console.log({ id });
-  const orderDB = await db.Order.findByPk(id, {
-    // Make sure to include the products
-    include: [
-      {
-        model: db.Product,
-        as: 'products',
-        required: false,
-        // Pass in the Product attributes that you want to retrieve
-        attributes: ['id', 'name'],
-        through: {
-          // This block of code allows you to retrieve the properties of the join table
-          model: db.ProductOrder,
-          as: 'productOrders',
-          attributes: ['quantity'],
-        },
-      },
-    ],
-  });
-
-  if (!orderDB) throw new Error('Order not found');
-  return orderDB;
 }
 
 // update - TODO:
