@@ -132,7 +132,11 @@ Model:
 
 ### run the container
 
-> `docker run --name docker-mysql --network host -e MYSQL_ROOT_PASSWORD=password -d mysql` > `docker run --rm --name=docker-mysql --env MYSQL_ROOT_PASSWORD=password --detach --publish 3306:3306 mysql`
+> `docker run --name docker-mysql --network host -e MYSQL_ROOT_PASSWORD=password -d mysql`
+
+#### specific port
+
+> `docker run --rm --name=docker-mysql --env MYSQL_ROOT_PASSWORD=password --detach --publish 3306:3306 mysql`
 
 - `--name` container name
 - `--network` specify the network of container
