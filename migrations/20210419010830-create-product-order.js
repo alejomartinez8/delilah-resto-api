@@ -12,10 +12,18 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       productId: {
-        type: Sequelize.UUID,
+        type: Sequelize.DataTypes.UUID,
+        references: {
+          model: 'Products',
+          key: 'id',
+        },
       },
       orderId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Orders',
+          key: 'id',
+        },
       },
       quantity: {
         type: Sequelize.DECIMAL,
