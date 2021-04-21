@@ -48,7 +48,7 @@ const create = async (req) => {
   // Create and save the order
   const savedOrder = await db.Order.create(newOrder, { w: 1 }, { returning: true });
 
-  const promisesSubtotal = await req.body.products.map(async (item) => {
+  const promisesSubtotal = req.body.products.map(async (item) => {
     const productDB = await db.Product.findByPk(item.id);
 
     await db.ProductOrder.create(
