@@ -21,7 +21,11 @@ const include = [
   },
 ];
 
-// getById
+/**
+ * Get an order by ID
+ * @param {*} id
+ * @returns
+ */
 async function getById(id) {
   const orderDB = await db.Order.findByPk(id, {
     include,
@@ -31,7 +35,11 @@ async function getById(id) {
   return orderDB;
 }
 
-// create
+/**
+ * Create an order
+ * @param {*} req
+ * @returns
+ */
 const create = async (req) => {
   const newOrder = req.body;
 
@@ -71,13 +79,15 @@ const create = async (req) => {
   return getById(savedOrder.id, { include });
 };
 
-// getAll
+/**
+ * get all orders filter by user
+ * @param {*} req
+ * @returns
+ */
 async function getAll(req) {
   const paramsQuery = {
     include,
   };
-
-  console.log(req.user);
 
   if (req.user.role === 'user') {
     paramsQuery.where = { userId: req.user.id };
@@ -119,9 +129,12 @@ async function _delete(req) {
       },
     ],
   });
+
   if (!orderDB) throw new Error('Order not found');
 
-  return orderDB.destroy();
+  const productOrders = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
+  await Promise.all(productOrders.map(async (item) => item.destroy()));
+  return orderDB.destroy(include);
 }
 
 module.exports = {
