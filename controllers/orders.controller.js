@@ -16,7 +16,7 @@ function create(req, res, next) {
 
 function getAll(req, res, next) {
   orderService
-    .getAll()
+    .getAll(req)
     .then((users) => res.json(users))
     .catch(next);
 }
@@ -50,7 +50,7 @@ function _delete(req, res, next) {
     .catch(next);
 }
 
-router.get('/all', authorize('user', 'admin'), getAll);
+router.get('/', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.post('/create', authorize('user', 'admin'), create);
 router.put('/update/:id', authorize('user', 'admin'), update);

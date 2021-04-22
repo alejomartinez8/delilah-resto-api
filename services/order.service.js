@@ -33,7 +33,7 @@ async function getById(id) {
 
 // create
 const create = async (req) => {
-  let newOrder = req.body;
+  const newOrder = req.body;
 
   // Add the userId
   if (req.user.role === 'user' || !req.body.userId) {
@@ -44,11 +44,12 @@ const create = async (req) => {
   if (!newOrder.userId) {
     throw new Error('Please add an userId to create the order');
   }
+  const { products } = newOrder;
+  newOrder.orderDate = new Date();
 
-  // Create and save the order
   const savedOrder = await db.Order.create(newOrder, { w: 1 }, { returning: true });
 
-  const promisesSubtotal = req.body.products.map(async (item) => {
+  const promisesSubtotal = products.map(async (item) => {
     const productDB = await db.Product.findByPk(item.id);
 
     await db.ProductOrder.create(
@@ -65,22 +66,24 @@ const create = async (req) => {
   });
 
   const subtotals = await Promise.all(promisesSubtotal);
-
   savedOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
-
   await savedOrder.save();
-  newOrder = await getById(savedOrder.id, { include });
-  return newOrder;
+  return getById(savedOrder.id, { include });
 };
 
 // getAll
-async function getAll() {
-  const allOrders = await db.Order.findAll({
-    // Make sure to include the products
+async function getAll(req) {
+  const paramsQuery = {
     include,
-  });
+  };
 
-  console.log({ allOrders });
+  console.log(req.user);
+
+  if (req.user.role === 'user') {
+    paramsQuery.where = { userId: req.user.id };
+  }
+
+  const allOrders = await db.Order.findAll(paramsQuery);
 
   // If everything goes well respond with the orders
   return allOrders;

@@ -149,7 +149,7 @@ paths:
       tags:
         - orders
       summary: Return all orders
-      description: Returns an array of orders
+      description: Returns an array of orders. If your an admin you get All Order, if you're an user you get your own orders.
       operationId: getAll
       responses:
         200:
@@ -181,12 +181,9 @@ paths:
             schema:
               $ref: '#/components/schemas/Order'
             example:
-                properties:
-                  orderDate: "2021-04-19T05:47:18.470Z"
-                  status: new
-                  paymentType: Cash
-                  userId: 1
-                  products: [ {id: 1, quantity: 2}, {id: 2, quantity: 3},]             
+                status: new
+                paymentType: Cash
+                products: [ {id: "caf52e98-6231-48eb-b374-f19c90d2e15c", quantity: 2}, {id: "fdc6785f-05ef-4dd1-ab3f-5bbb0abc33e4", quantity: 3},]             
       responses:
         200:
           description: successful operation
