@@ -41,6 +41,7 @@ async function getById(id) {
  * @returns
  */
 const create = async (req) => {
+  let error = '';
   const newOrder = req.body;
 
   // Add the userId
@@ -54,6 +55,7 @@ const create = async (req) => {
   }
   const { products } = newOrder;
   newOrder.orderDate = new Date();
+  newOrder.total = 0;
 
   const savedOrder = await db.Order.create(newOrder, { w: 1 }, { returning: true });
 
@@ -62,7 +64,10 @@ const create = async (req) => {
       products.map(async (product) => {
         const productDB = await db.Product.findByPk(product.id);
 
-        if (!productDB) throw new Error('Product not found');
+        if (!productDB) {
+          error = 'Product not found';
+          return new Error('Product not found');
+        }
 
         await db.ProductOrder.create(
           {
@@ -79,6 +84,11 @@ const create = async (req) => {
     );
 
     savedOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
+  }
+
+  if (error) {
+    await savedOrder.destroy();
+    throw new Error(error);
   }
 
   await savedOrder.save();
@@ -112,6 +122,7 @@ async function getAll(req) {
  * @returns
  */
 async function update(req) {
+  let error = '';
   const orderDB = await getById(req.params.id, include);
 
   if (!orderDB) throw new Error('Order not found');
@@ -133,7 +144,10 @@ async function update(req) {
       products.map(async (product) => {
         const productDB = await db.Product.findByPk(product.id); // to get the prize
 
-        if (!productDB) throw new Error('Product not found');
+        if (!productDB) {
+          error = 'Product not found';
+          return new Error('Product not found');
+        }
 
         const productUpdate = productOrders.find(
           (productOrder) => productOrder.productId === product.id,
@@ -162,6 +176,10 @@ async function update(req) {
     );
 
     orderDB.total = subtotals.reduce((acc, cur) => acc + cur, 0);
+  }
+
+  if (error) {
+    throw new Error(error);
   }
 
   // Clean products no more nedeed on productsOrder
