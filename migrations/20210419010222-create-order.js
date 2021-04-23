@@ -14,14 +14,16 @@ module.exports = {
       orderDate: {
         type: Sequelize.DATE,
       },
-      paymentType: {
-        type: Sequelize.STRING,
-      },
       total: {
         type: Sequelize.DECIMAL,
       },
+      paymentType: {
+        type: Sequelize.ENUM('cash', 'transfer', 'credit_card'),
+        defaultValue: 'cash',
+      },
       status: {
-        type: Sequelize.STRING,
+        type: Sequelize.ENUM('new', 'confirmed', 'preparing', 'shipping', 'delivered', 'canceled'),
+        defaultValue: 'new',
       },
       userId: {
         type: Sequelize.INTEGER,

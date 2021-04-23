@@ -25,9 +25,15 @@ module.exports = (sequelize, DataTypes) => {
   Order.init(
     {
       orderDate: DataTypes.DATE,
-      paymentType: DataTypes.STRING,
       total: DataTypes.DECIMAL,
-      status: DataTypes.STRING,
+      paymentType: {
+        type: DataTypes.ENUM('cash', 'transfer', 'credit_card'),
+        defaultValue: 'cash',
+      },
+      status: {
+        type: DataTypes.ENUM('new', 'confirmed', 'preparing', 'shipping', 'delivered', 'canceled'),
+        defaultValue: 'new',
+      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
