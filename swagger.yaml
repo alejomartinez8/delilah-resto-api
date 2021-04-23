@@ -28,10 +28,28 @@ paths:
           description: successful operation
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Product'
+              example:
+                - id: 4
+                  name: Hot Dog
+                  price: '5'
+                  description: Hot Dog Description
+                  imageURL: https://www.vvsupremo.com/wp-content/uploads/2016/02/900X570_Mexican-Style-Hot-Dogs.jpg
+                  createdAt: '2021-04-23T04:30:50.000Z'
+                  updatedAt: '2021-04-23T04:30:50.000Z'
+                - id: 14
+                  name: Hamburguer
+                  price: '10'
+                  description: Hamburguer Description
+                  imageURL: https://conteudo.imguol.com.br/c/entretenimento/9d/2020/05/26/hamburguer-recheado-na-churrasqueira-1590524861807_v2_450x337.jpg
+                  createdAt: '2021-04-23T04:30:50.000Z'
+                  updatedAt: '2021-04-23T04:30:50.000Z'
+                - id: 24
+                  name: Pizza
+                  price: '8'
+                  description: Pizza Description
+                  imageURL: https://cdn.colombia.com/sdi/2011/08/25/pizza-margarita-803241.jpg
+                  createdAt: '2021-04-23T04:30:50.000Z'
+                  updatedAt: '2021-04-23T04:30:50.000Z'
         400:
           $ref: '#/components/responses/BadRequest'
     # Create a new product
@@ -52,11 +70,7 @@ paths:
         required: true
       responses:
         200:
-          description: Product create successfully
-          content: 
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Product'
+          $ref: '#/components/responses/OKProduct'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -81,11 +95,7 @@ paths:
             format: int64
       responses:
         200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Product'
+          $ref: '#/components/responses/OKProduct'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -114,6 +124,8 @@ paths:
               price: 200
               imageUrl: https://californiaavocado.com/wp-content/uploads/2020/07/Mediterranean-Grilled-Veggie-Wrap-with-California.jpeg
       responses:
+        200:
+          $ref: '#/components/responses/OKProduct'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -136,6 +148,8 @@ paths:
             type: integer
             format: int64
       responses:
+        200:
+          description: Product deleted successfully
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -303,6 +317,8 @@ paths:
             type: integer
             format: int64
       responses:
+        200:
+          description: Order deleted successfully
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -390,13 +406,28 @@ paths:
       description: Get all user if the user request is Admin
       responses:
         200:
-          description: successful operation
+          description: User response OK
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
+              example:
+                - id: 4
+                  username: admin
+                  names: Admin Profile
+                  email: admin@example.com
+                  phone: 555 555 555
+                  address: Address user
+                  role: admin
+                  createdAt: '2021-04-23T04:30:50.000Z'
+                  updatedAt: '2021-04-23T04:30:50.000Z'
+                - id: 14
+                  username: user
+                  names: User Profile
+                  email: user@example.com
+                  phone: 555 555 555
+                  address: Address user
+                  role: user
+                  createdAt: '2021-04-23T04:30:50.000Z'
+                  updatedAt: '2021-04-23T04:30:50.000Z'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -412,11 +443,7 @@ paths:
       operationId: getProfile
       responses:  
         200:
-          description: successful operation
-          content: 
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          $ref: '#/components/responses/OKUser'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -439,11 +466,7 @@ paths:
             type: number
       responses:
         200:
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          $ref: '#/components/responses/OKUser'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -480,11 +503,7 @@ paths:
                 password: password
       responses:
         200:
-          description: User updtaded successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
+          $ref: '#/components/responses/OKUser'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -615,8 +634,34 @@ components:
             properties:
               error:
                 type: string
+    OKProduct:
+      description: Product response OK
+      content:
+        application/json:
+          example:
+            id: 1
+            name: Hot Dog
+            price: '5'
+            description: Hot Dog Description
+            imageURL: https://www.vvsupremo.com/wp-content/uploads/2016/02/900X570_Mexican-Style-Hot-Dogs.jpg
+            createdAt: '2021-04-23T04:25:08.000Z'
+            updatedAt: '2021-04-23T04:25:08.000Z'
+    OKUser:
+      description: User response OK
+      content:
+        application/json:
+          example:
+            id: 14
+            username: user
+            names: User Profile
+            email: user@example.com
+            phone: 555 555 555
+            address: Address user
+            role: user
+            createdAt: '2021-04-23T04:30:50.000Z'
+            updatedAt: '2021-04-23T04:30:50.000Z'
     OKOrder:
-      description: Order
+      description: Order response OK
       content:
         application/json:
           example:
