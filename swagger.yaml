@@ -38,14 +38,14 @@ paths:
                   updatedAt: '2021-04-23T04:30:50.000Z'
                 - id: 14
                   name: Hamburguer
-                  price: '10'
+                  price: 10
                   description: Hamburguer Description
                   imageURL: https://conteudo.imguol.com.br/c/entretenimento/9d/2020/05/26/hamburguer-recheado-na-churrasqueira-1590524861807_v2_450x337.jpg
                   createdAt: '2021-04-23T04:30:50.000Z'
                   updatedAt: '2021-04-23T04:30:50.000Z'
                 - id: 24
                   name: Pizza
-                  price: '8'
+                  price: 8
                   description: Pizza Description
                   imageURL: https://cdn.colombia.com/sdi/2011/08/25/pizza-margarita-803241.jpg
                   createdAt: '2021-04-23T04:30:50.000Z'
@@ -183,11 +183,11 @@ paths:
                   - id: 1
                     name: Hot Dog
                     productOrders:
-                      quantity: '20'
+                      quantity: 20
                   - id: 2
                     name: Pizza
                     productOrders:
-                      quantity: '30'
+                      quantity: 30
                   User:
                     id: 2
                     names: FirstName LastName
@@ -218,9 +218,9 @@ paths:
               userId: 2
               products:
               - id: 1
-                quantity: '20'
+                quantity: 20
               - id: 2
-                quantity: '30'  
+                quantity: 30  
       responses:
         200:
           $ref: '#/components/responses/OKOrder'
@@ -285,9 +285,9 @@ paths:
               userId: 2
               products:
               - id: 1
-                quantity: '20'
+                quantity: 20
               - id: 2
-                quantity: '30'   
+                quantity: 30   
       responses:
         200:
           $ref: '#/components/responses/OKOrder'
@@ -549,8 +549,9 @@ components:
         paymentType:
           type: string
           enum:
-            - Cash
-            - Transfer
+            - cash
+            - trasnfer
+            - credit_card
         paymentValue:
           type: number
           example: 1000
@@ -558,10 +559,11 @@ components:
           type: string
           enum:
             - new
-            - placed
-            - in progress
-            - shipped
+            - confirmed
+            - preparing
+            - shipping
             - delivered
+            - canceled
         products:
           type: array
           items:
@@ -575,14 +577,19 @@ components:
         id:
           type: integer
           format: int64
+          example: 1
         username:
           type: string
+          example: username
         names:
           type: string
+          example: FirstName LastName
         email:
           type: string
+          example: username@example.com
         phone:
           type: string
+          example: 555 555 555
         password:
           type: string
     Product:
@@ -600,6 +607,9 @@ components:
         price:
           type: number
           example: 1000
+        description:
+          type: string
+          example: Product Description
         imageUrl:
           type: string
           example: >-
@@ -677,11 +687,11 @@ components:
             - id: 1
               name: Hot Dog
               productOrders:
-                quantity: '20'
+                quantity: 20
             - id: 2
               name: Pizza
               productOrders:
-                quantity: '30'
+                quantity: 30
             User:
               id: 2
               names: FirstName LastName
