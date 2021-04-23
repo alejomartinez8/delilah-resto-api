@@ -3,6 +3,7 @@
 Project 3 - Acamica Fullstack Web Dev Career
 
 - [Delilah resto api](#delilah-resto-api)
+  - [Main Modules](#main-modules)
   - [Installation](#installation)
     - [Node](#node)
     - [Database](#database)
@@ -12,6 +13,16 @@ Project 3 - Acamica Fullstack Web Dev Career
   - [Running the api](#running-the-api)
     - [Using local node server](#using-local-node-server)
     - [Swagger](#swagger)
+
+## Main Modules
+
+- express
+- joi
+- sequelize
+- swagger-ui-express
+- eslint
+- husky
+- sequelize-cli
 
 ## Installation
 
