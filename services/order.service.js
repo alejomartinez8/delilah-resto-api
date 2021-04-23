@@ -114,7 +114,7 @@ async function update(req) {
 
   if (!orderDB) throw new Error('Order not found');
 
-  if (req.user.id && req.user.id !== orderDB.userId) {
+  if (req.user.role === 'user' && req.user.id !== orderDB.userId) {
     throw new Error('Unauthorized Order');
   }
 
@@ -172,7 +172,7 @@ async function update(req) {
     await Promise.all(producstDelete.filter((productOrder) => productOrder.destroy()));
   }
 
-  await orderDB.save();
+  await orderDB.update();
   return getById(orderDB.id, { include });
 }
 

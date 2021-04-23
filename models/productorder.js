@@ -17,8 +17,24 @@ module.exports = (sequelize, DataTypes) => {
   }
   ProductOrder.init(
     {
-      productId: DataTypes.UUID,
-      orderId: DataTypes.INTEGER,
+      productId: {
+        type: DataTypes.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Products',
+          key: 'id',
+          as: 'productId',
+        },
+      },
+      orderId: {
+        type: DataTypes.INTEGER,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Orders',
+          key: 'id',
+          as: 'orderId',
+        },
+      },
       quantity: DataTypes.DECIMAL,
     },
     {

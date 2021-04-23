@@ -13,16 +13,20 @@ module.exports = {
       },
       productId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'Products',
           key: 'id',
+          as: 'productId',
         },
       },
       orderId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
         references: {
           model: 'Orders',
           key: 'id',
+          as: 'orderId',
         },
       },
       quantity: {

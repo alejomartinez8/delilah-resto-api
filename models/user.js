@@ -45,10 +45,10 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-  User.beforeCreate((user) => {
-    // eslint-disable-next-line no-param-reassign
-    user.id = uuidv4();
-  });
+  // User.beforeCreate((user) => {
+  //   // eslint-disable-next-line no-param-reassign
+  //   user.id = uuidv4();
+  // });
 
   return User;
 };

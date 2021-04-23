@@ -28,7 +28,16 @@ module.exports = (sequelize, DataTypes) => {
       paymentType: DataTypes.STRING,
       total: DataTypes.DECIMAL,
       status: DataTypes.STRING,
-      userId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        onDelete: 'CASCADE',
+        references: {
+          model: 'Users',
+          key: 'id',
+          as: 'userId',
+        },
+      },
     },
     {
       sequelize,
