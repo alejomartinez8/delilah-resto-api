@@ -104,7 +104,11 @@ async function getAll(req) {
   return allOrders;
 }
 
-// update - TODO:
+/**
+ * Update an order
+ * @param {*} req
+ * @returns
+ */
 async function update(req) {
   const orderDB = await getById(req.params.id, include);
 
@@ -117,12 +121,12 @@ async function update(req) {
   Object.assign(orderDB, req.body);
   const { products } = req.body;
 
-  if (products) {
-    const productOrders = await db.ProductOrder.findAll({
-      where: { orderId: orderDB.id },
-    });
+  const productOrders = await db.ProductOrder.findAll({
+    where: { orderId: orderDB.id },
+  });
 
-    // update or create new
+  // update or create new products
+  if (products) {
     const subtotals = await Promise.all(
       products.map(async (product) => {
         const productDB = await db.Product.findByPk(product.id); // to get the prize
@@ -149,8 +153,6 @@ async function update(req) {
           );
         }
 
-        // TODO: delete products no more nedeed on productsOrder
-
         return productDB.price * product.quantity;
       }),
     );
@@ -158,8 +160,20 @@ async function update(req) {
     orderDB.total = subtotals.reduce((acc, cur) => acc + cur, 0);
   }
 
+  // Clean products no more nedeed on productsOrder
+  if (productOrders) {
+    const producstDelete = productOrders.filter((productOrder) => {
+      if (products) {
+        return !products.some((product) => product.id === productOrder.productId);
+      }
+      return true;
+    });
+
+    await Promise.all(producstDelete.filter((productOrder) => productOrder.destroy()));
+  }
+
   await orderDB.save();
-  return orderDB;
+  return getById(orderDB.id, { include });
 }
 
 /**

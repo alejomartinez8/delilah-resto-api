@@ -17,14 +17,14 @@ function create(req, res, next) {
 function getAll(req, res, next) {
   orderService
     .getAll(req)
-    .then((users) => res.json(users))
+    .then((orders) => res.json(orders))
     .catch(next);
 }
 
 function getById(req, res, next) {
   orderService
     .getById(req.params.id)
-    .then((user) => res.json(user))
+    .then((order) => res.json(order))
     .catch(next);
 }
 
@@ -39,7 +39,7 @@ function getById(req, res, next) {
 function update(req, res, next) {
   orderService
     .update(req, res)
-    .then(() => res.json({ msg: 'Update order successfully' }))
+    .then((order) => res.json(order))
     .catch(next);
 }
 

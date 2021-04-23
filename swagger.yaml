@@ -156,10 +156,28 @@ paths:
           description: successful operation
           content:
             application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Order'
+              example:
+                - id: 26
+                  orderDate: '2021-04-22T22:01:04.000Z'
+                  paymentType: Transfer
+                  total: '340'
+                  status: end
+                  userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+                  createdAt: '2021-04-22T21:59:35.000Z'
+                  updatedAt: '2021-04-23T03:35:44.000Z'
+                  products:
+                  - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+                    name: Hot Dog
+                    productOrders:
+                      quantity: '20'
+                  - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+                    name: Pizza
+                    productOrders:
+                      quantity: '30'
+                  User:
+                    id: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+                    names: FirstName LastName
+                    address: Medellin
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -181,16 +199,17 @@ paths:
             schema:
               $ref: '#/components/schemas/Order'
             example:
-                status: new
-                paymentType: Cash
-                products: [ {id: "caf52e98-6231-48eb-b374-f19c90d2e15c", quantity: 2}, {id: "fdc6785f-05ef-4dd1-ab3f-5bbb0abc33e4", quantity: 3},]             
+              paymentType: Transfer
+              status: new
+              userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+              products:
+              - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+                quantity: '20'
+              - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+                quantity: '30'  
       responses:
         200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
+          $ref: '#/components/responses/OKOrder'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -217,11 +236,7 @@ paths:
             format: int64
       responses:
         200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
+          $ref: '#/components/responses/OKOrder'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -244,31 +259,28 @@ paths:
             type: integer
             format: int64
       requestBody:
-        description: order placed for purchasing the product
+        description: Update an Order
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/Order'
             example:
-                properties:
-                  orderDate: "2021-04-19T05:47:18.470Z"
-                  status: new
-                  paymentType: Cash
-                  userId: 1
-                  products: [ {id: 1, quantity: 2}, {id: 2, quantity: 3},]     
+              paymentType: Transfer
+              status: new
+              userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+              products:
+              - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+                quantity: '20'
+              - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+                quantity: '30'   
       responses:
         200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Order'
+          $ref: '#/components/responses/OKOrder'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
           $ref: '#/components/responses/Unauthorized'
-        
       security:
         - token: []
   # Delete an order
@@ -531,13 +543,13 @@ components:
             - in progress
             - shipped
             - delivered
-        userId:
-          type: integer
-          format: int64
         products:
           type: array
           items:
             $ref: '#/components/schemas/Product'
+        user:
+          type: object
+          $ref: '#/components/schemas/User'
     User:
       type: object
       properties:
@@ -603,6 +615,32 @@ components:
             properties:
               error:
                 type: string
+    OKOrder:
+      description: Order
+      content:
+        application/json:
+          example:
+            id: 26
+            orderDate: '2021-04-22T22:01:04.000Z'
+            paymentType: Transfer
+            total: '340'
+            status: end
+            userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+            createdAt: '2021-04-22T21:59:35.000Z'
+            updatedAt: '2021-04-23T03:35:44.000Z'
+            products:
+            - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+              name: Hot Dog
+              productOrders:
+                quantity: '20'
+            - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+              name: Pizza
+              productOrders:
+                quantity: '30'
+            User:
+              id: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+              names: FirstName LastName
+              address: Medellin
         
   
       
