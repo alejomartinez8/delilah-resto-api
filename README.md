@@ -38,11 +38,13 @@ DB_NAME=delila-resto-db
 
 Add the secret word to `env` file
 
+```
 JWT_SECRET=My_secret_jwt
+```
 
 ### Migrations
 
-You can create the table with the next commands
+You can create the table with the commands
 
 ```bash
 sequelize-cli db:migrate
@@ -50,7 +52,7 @@ sequelize-cli db:migrate
 
 ### Data Example
 
-You can add some data example to DB to, this command must be after migrations
+You can add some data example to DB, this command must be after migrations
 
 ```bash
 sequelize-cli db:seed:all
@@ -59,7 +61,7 @@ sequelize-cli db:seed:all
 ## Running the api
 
 ### Using local node server
-Yo can run the api with next commmand
+Yo can run the api with commmand
 ```
 npm run dev
 ```
