@@ -44,7 +44,7 @@ DB_PASS=password
 DB_NAME=delila-resto-db
 ```
 
-2. Install mysql and create a new databe with the same name above (`DB_NANE`), alternatively you can create it with the next command after created `.env` fila and adding the env vars:
+1. Install mysql and create a new databe with the same name above (`DB_NANE`), alternatively you can create it with the next command after created `.env` file and adding the vars:
 
 ```bash
 sequelize-cli db:create
