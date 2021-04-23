@@ -34,8 +34,7 @@ npm install
 
 ### Database
 
-1. Install mysql and create a new table.
-2. Add env vars to the `.env` file
+1. Add env vars to the `.env` file
 
 ```
 DB_HOST=localhost
@@ -45,9 +44,17 @@ DB_PASS=password
 DB_NAME=delila-resto-db
 ```
 
+2. Install mysql and create a new databe with the same name above (`DB_NANE`), alternatively you can create it with the next command after created `.env` fila and adding the env vars:
+
+```bash
+sequelize-cli db:create
+```
+
+Verify that db was created on mysql
+
 ### JWT
 
-Add the secret word to `env` file
+Add the secret word to `.env` file
 
 ```
 JWT_SECRET=My_secret_jwt
@@ -72,7 +79,7 @@ sequelize-cli db:seed:all
 ## Running the api
 
 ### Using local node server
-Yo can run the api with commmand
+Yo can run the api with command
 ```
 npm run dev
 ```
@@ -80,8 +87,8 @@ npm run dev
 ### Swagger
 To interact with the api, and its endpotins and models, you can use 2 options:
 
-1. http://localhost:4000/api-docs/ (Be sure you choose this server on Swagger Web)
-2. https://delilah-resto-api-am.herokuapp.com/api-docs/ (Live version with some examples)
+1. http://localhost:4000/api-docs/ (Be sure you choose this server on Swagger Web UI)
+2. https://delilah-resto-api-am.herokuapp.com/api-docs/ (Live version)
 
 To use an admin example you can use these credentials:
 
