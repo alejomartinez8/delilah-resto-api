@@ -57,24 +57,28 @@ const create = async (req) => {
 
   const savedOrder = await db.Order.create(newOrder, { w: 1 }, { returning: true });
 
-  const promisesSubtotal = products.map(async (item) => {
-    const productDB = await db.Product.findByPk(item.id);
+  if (products) {
+    const subtotals = await Promise.all(
+      products.map(async (product) => {
+        const productDB = await db.Product.findByPk(product.id);
 
-    await db.ProductOrder.create(
-      {
-        orderId: savedOrder.id,
-        productId: item.id,
-        quantity: item.quantity,
-      },
-      { w: 1 },
-      { returning: true },
+        await db.ProductOrder.create(
+          {
+            orderId: savedOrder.id,
+            productId: product.id,
+            quantity: product.quantity,
+          },
+          { w: 1 },
+          { returning: true },
+        );
+
+        return productDB.price * product.quantity;
+      }),
     );
 
-    return productDB.price * item.quantity;
-  });
+    savedOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
+  }
 
-  const subtotals = await Promise.all(promisesSubtotal);
-  savedOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
   await savedOrder.save();
   return getById(savedOrder.id, { include });
 };
@@ -89,6 +93,7 @@ async function getAll(req) {
     include,
   };
 
+  // filter user order
   if (req.user.role === 'user') {
     paramsQuery.where = { userId: req.user.id };
   }
@@ -101,34 +106,69 @@ async function getAll(req) {
 
 // update - TODO:
 async function update(req) {
-  const orderDB = await getById(req.params.id);
+  const orderDB = await getById(req.params.id, include);
+
   if (!orderDB) throw new Error('Order not found');
 
+  if (req.user.id && req.user.id !== orderDB.userId) {
+    throw new Error('Unauthorized Order');
+  }
+
   Object.assign(orderDB, req.body);
+  const { products } = req.body;
+
+  if (products) {
+    const productOrders = await db.ProductOrder.findAll({
+      where: { orderId: orderDB.id },
+    });
+
+    // update or create new
+    const subtotals = await Promise.all(
+      products.map(async (product) => {
+        const productDB = await db.Product.findByPk(product.id); // to get the prize
+
+        const productUpdate = productOrders.find(
+          (productOrder) => productOrder.productId === product.id,
+        );
+
+        if (productUpdate) {
+          productUpdate.update({
+            orderId: orderDB.id,
+            productId: product.id,
+            quantity: product.quantity,
+          });
+        } else {
+          await db.ProductOrder.create(
+            {
+              orderId: orderDB.id,
+              productId: product.id,
+              quantity: product.quantity,
+            },
+            { w: 1 },
+            { returning: true },
+          );
+        }
+
+        // TODO: delete products no more nedeed on productsOrder
+
+        return productDB.price * product.quantity;
+      }),
+    );
+
+    orderDB.total = subtotals.reduce((acc, cur) => acc + cur, 0);
+  }
+
   await orderDB.save();
-  return orderDB.get();
+  return orderDB;
 }
 
-// _delete - TODO:
+/**
+ * Delete an oder, only admin user
+ * @param {*} req
+ * @returns
+ */
 async function _delete(req) {
-  const orderDB = await getById(req.params.id, {
-    // Make sure to include the products
-    include: [
-      {
-        model: db.Product,
-        as: 'products',
-        required: false,
-        // Pass in the Product attributes that you want to retrieve
-        attributes: ['id', 'name'],
-        through: {
-          // This block of code allows you to retrieve the properties of the join table
-          model: db.ProductOrder,
-          as: 'productOrders',
-          attributes: ['quantity'],
-        },
-      },
-    ],
-  });
+  const orderDB = await getById(req.params.id, include);
 
   if (!orderDB) throw new Error('Order not found');
 

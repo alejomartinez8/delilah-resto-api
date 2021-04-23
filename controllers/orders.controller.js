@@ -54,6 +54,6 @@ router.get('/', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.post('/create', authorize('user', 'admin'), create);
 router.put('/update/:id', authorize('user', 'admin'), update);
-router.delete('/delete/:id', authorize('user', 'admin'), _delete);
+router.delete('/delete/:id', authorize('admin'), _delete);
 
 module.exports = router;

@@ -19,7 +19,7 @@ const db = {};
 
 let sequelize;
 
-config.logging = (...msg) => console.log(chalk.cyan(msg));
+config.logging = (...msg) => console.log('Sequelize:', chalk.cyan(msg), '\n');
 
 if (config.DATABASE_URL) {
   sequelize = new Sequelize(process.env[config.DATABASE_URL], config);
