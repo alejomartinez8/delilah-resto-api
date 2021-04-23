@@ -162,20 +162,20 @@ paths:
                   paymentType: Transfer
                   total: '340'
                   status: end
-                  userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+                  userId: 2
                   createdAt: '2021-04-22T21:59:35.000Z'
                   updatedAt: '2021-04-23T03:35:44.000Z'
                   products:
-                  - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+                  - id: 1
                     name: Hot Dog
                     productOrders:
                       quantity: '20'
-                  - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+                  - id: 2
                     name: Pizza
                     productOrders:
                       quantity: '30'
                   User:
-                    id: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+                    id: 2
                     names: FirstName LastName
                     address: Medellin
         400:
@@ -201,11 +201,11 @@ paths:
             example:
               paymentType: Transfer
               status: new
-              userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+              userId: 2
               products:
-              - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+              - id: 1
                 quantity: '20'
-              - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+              - id: 2
                 quantity: '30'  
       responses:
         200:
@@ -268,11 +268,11 @@ paths:
             example:
               paymentType: Transfer
               status: new
-              userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+              userId: 2
               products:
-              - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+              - id: 1
                 quantity: '20'
-              - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+              - id: 2
                 quantity: '30'   
       responses:
         200:
@@ -625,20 +625,20 @@ components:
             paymentType: Transfer
             total: '340'
             status: end
-            userId: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+            userId: 2
             createdAt: '2021-04-22T21:59:35.000Z'
             updatedAt: '2021-04-23T03:35:44.000Z'
             products:
-            - id: 15274f01-7cdb-4428-aa5a-e315c279f31e
+            - id: 1
               name: Hot Dog
               productOrders:
                 quantity: '20'
-            - id: caf52e98-6231-48eb-b374-f19c90d2e15c
+            - id: 2
               name: Pizza
               productOrders:
                 quantity: '30'
             User:
-              id: 8772980b-94a1-4096-b5e5-ac434c8c0d23
+              id: 2
               names: FirstName LastName
               address: Medellin
         

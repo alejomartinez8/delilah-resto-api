@@ -3,7 +3,6 @@
 'use strict';
 
 const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -18,7 +17,6 @@ module.exports = {
      */
     await queryInterface.bulkInsert('Users', [
       {
-        id: uuidv4(),
         username: 'admin',
         names: 'Admin Profile',
         email: 'admin@example.com',
@@ -30,7 +28,6 @@ module.exports = {
         updatedAt: new Date(),
       },
       {
-        id: uuidv4(),
         username: 'user',
         names: 'User Profile',
         email: 'user@example.com',
