@@ -62,6 +62,8 @@ const create = async (req) => {
       products.map(async (product) => {
         const productDB = await db.Product.findByPk(product.id);
 
+        if (!productDB) throw new Error('Product not found');
+
         await db.ProductOrder.create(
           {
             orderId: savedOrder.id,
@@ -130,6 +132,8 @@ async function update(req) {
     const subtotals = await Promise.all(
       products.map(async (product) => {
         const productDB = await db.Product.findByPk(product.id); // to get the prize
+
+        if (!productDB) throw new Error('Product not found');
 
         const productUpdate = productOrders.find(
           (productOrder) => productOrder.productId === product.id,
