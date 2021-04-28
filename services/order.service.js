@@ -45,9 +45,12 @@ const create = async (req) => {
   const newOrder = req.body;
 
   // Add the userId
-  if (req.user.role === 'user' || !req.body.userId) {
+  if (!newOrder.userId) {
     newOrder.userId = req.user.id;
   }
+
+  const userDB = db.User.findByPk(newOrder.userId);
+  if (!userDB) throw new Error('User not found');
 
   // Verify the userId it's no void
   if (!newOrder.userId) {
