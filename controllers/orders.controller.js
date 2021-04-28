@@ -53,7 +53,7 @@ function _delete(req, res, next) {
 router.get('/', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.post('/create', authorize('user', 'admin'), create);
-router.put('/update/:id', authorize('user', 'admin'), update);
+router.put('/update/:id', authorize('admin'), update);
 router.delete('/delete/:id', authorize('admin'), _delete);
 
 module.exports = router;

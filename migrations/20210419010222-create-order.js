@@ -22,7 +22,7 @@ module.exports = {
         defaultValue: 'cash',
       },
       status: {
-        type: Sequelize.ENUM('new', 'confirmed', 'preparing', 'shipping', 'delivered', 'canceled'),
+        type: Sequelize.ENUM('new', 'confirmed', 'preparing', 'shipping', 'delivered', 'cancelled'),
         defaultValue: 'new',
       },
       userId: {

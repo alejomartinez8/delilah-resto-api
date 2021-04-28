@@ -123,19 +123,17 @@ async function getAll(req) {
  */
 async function update(req) {
   let error = '';
-  const orderDB = await getById(req.params.id, include);
+  const orderDB = await await db.Order.findByPk(req.params.id);
 
   if (!orderDB) throw new Error('Order not found');
 
-  if (req.user.role === 'user' && req.user.id !== orderDB.userId) {
-    throw new Error('Unauthorized Order');
-  }
+  const newOrder = req.body;
+  newOrder.id = req.params.id;
+  newOrder.updatedAt = new Date();
 
-  Object.assign(orderDB, req.body);
-  const { products } = req.body;
-
+  const { products } = newOrder;
   const productOrders = await db.ProductOrder.findAll({
-    where: { orderId: orderDB.id },
+    where: { orderId: newOrder.id },
   });
 
   // update or create new products
@@ -155,14 +153,14 @@ async function update(req) {
 
         if (productUpdate) {
           productUpdate.update({
-            orderId: orderDB.id,
+            orderId: newOrder.id,
             productId: product.id,
             quantity: product.quantity,
           });
         } else {
           await db.ProductOrder.create(
             {
-              orderId: orderDB.id,
+              orderId: newOrder.id,
               productId: product.id,
               quantity: product.quantity,
             },
@@ -175,7 +173,7 @@ async function update(req) {
       }),
     );
 
-    orderDB.total = subtotals.reduce((acc, cur) => acc + cur, 0);
+    newOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
   }
 
   if (error) {
@@ -194,7 +192,7 @@ async function update(req) {
     await Promise.all(producstDelete.filter((productOrder) => productOrder.destroy()));
   }
 
-  await orderDB.update();
+  await orderDB.update(newOrder);
   return getById(orderDB.id, { include });
 }
 

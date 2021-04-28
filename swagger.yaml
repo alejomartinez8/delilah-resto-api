@@ -263,6 +263,7 @@ paths:
       tags:
         - orders
       summary: Updates an order
+      description: Updates an order, you must pass the same array of products if don't like to modify it or the new products you like to update, if a product doesn't appear it will be deleted from order
       operationId: update
       parameters:
         - name: orderId
