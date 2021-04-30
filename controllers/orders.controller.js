@@ -43,6 +43,27 @@ function update(req, res, next) {
     .catch(next);
 }
 
+function addProduct(req, res, next) {
+  orderService
+    .addProduct(req)
+    .then((order) => res.json(order))
+    .catch(next);
+}
+
+function updateProduct(req, res, next) {
+  orderService
+    .updateProduct(req)
+    .then((order) => res.json(order))
+    .catch(next);
+}
+
+function deleteProduct(req, res, next) {
+  orderService
+    .deleteProduct(req)
+    .then((order) => res.json(order))
+    .catch(next);
+}
+
 function _delete(req, res, next) {
   orderService
     ._delete(req, res)
@@ -53,7 +74,10 @@ function _delete(req, res, next) {
 router.get('/', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.post('/create', authorize('user', 'admin'), create);
+router.post('/update/product/:id', authorize('admin'), addProduct);
+router.put('/update/product/:id', authorize('admin'), updateProduct);
 router.put('/update/:id', authorize('admin'), update);
+router.delete('/update/product/:id', authorize('admin'), deleteProduct);
 router.delete('/delete/:id', authorize('admin'), _delete);
 
 module.exports = router;

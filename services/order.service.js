@@ -12,7 +12,7 @@ const include = [
       // This block of code allows you to retrieve the properties of the join table
       model: db.ProductOrder,
       as: 'productOrders',
-      attributes: ['quantity'],
+      attributes: ['quantity', 'price'],
     },
   },
   {
@@ -77,6 +77,7 @@ const create = async (req) => {
             orderId: savedOrder.id,
             productId: product.id,
             quantity: product.quantity,
+            price: productDB.price,
           },
           { w: 1 },
           { returning: true },
@@ -125,77 +126,107 @@ async function getAll(req) {
  * @returns
  */
 async function update(req) {
-  let error = '';
   const orderDB = await await db.Order.findByPk(req.params.id);
-
   if (!orderDB) throw new Error('Order not found');
+  await orderDB.update(req.body);
+  return getById(orderDB.id, { include });
+}
 
-  const newOrder = req.body;
-  newOrder.id = req.params.id;
-  newOrder.updatedAt = new Date();
+function calcSubtotal(productsOrder) {
+  return productsOrder.map((item) => item.quantity * item.price).reduce((acc, cur) => acc + cur, 0);
+}
 
-  const { products } = newOrder;
-  const productOrders = await db.ProductOrder.findAll({
-    where: { orderId: newOrder.id },
+async function getOrder(id) {
+  const orderDB = await db.Order.findByPk(id, { include: 'products' });
+  if (!orderDB) throw new Error('Order not found');
+  return orderDB;
+}
+
+function validateProduct(products, product) {
+  if (!products.find((productDB) => productDB.id === product.id)) {
+    throw new Error('Product is not in the order');
+  }
+}
+
+/**
+ * Add product to Order
+ * @param {*} req
+ * @returns
+ */
+async function addProduct(req) {
+  const orderDB = await getOrder(req.params.id);
+  const product = req.body;
+
+  if (orderDB.products.find((productDB) => productDB.id === product.id)) {
+    throw new Error('Product is in the order');
+  }
+
+  const productDB = await db.Product.findByPk(product.id);
+  if (!productDB) throw new Error('Product not found in data base');
+
+  // add productOrder
+  await db.ProductOrder.create({
+    orderId: orderDB.id,
+    productId: product.id,
+    quantity: product.quantity,
+    price: productDB.price,
   });
 
-  // update or create new products
-  if (products) {
-    const subtotals = await Promise.all(
-      products.map(async (product) => {
-        const productDB = await db.Product.findByPk(product.id); // to get the prize
+  // calc subtotal & update order
+  const productsOrder = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
+  orderDB.total = calcSubtotal(productsOrder);
+  await orderDB.save();
+  return getById(orderDB.id, { include });
+}
 
-        if (!productDB) {
-          error = 'Product not found';
-          return new Error('Product not found');
-        }
+/**
+ * Update Product in Order
+ * @param {*} req
+ * @returns
+ */
+async function updateProduct(req) {
+  const orderDB = await getOrder(req.params.id);
+  const product = req.body;
+  validateProduct(orderDB.products, product);
 
-        const productUpdate = productOrders.find(
-          (productOrder) => productOrder.productId === product.id,
-        );
+  // update productOrder
+  const productOrder = await db.ProductOrder.findOne({
+    where: { productId: product.id, orderId: orderDB.id },
+  });
+  await productOrder.update({
+    productId: product.id,
+    orderId: orderDB.id,
+    quantity: product.quantity,
+    price: product.price,
+  });
 
-        if (productUpdate) {
-          productUpdate.update({
-            orderId: newOrder.id,
-            productId: product.id,
-            quantity: product.quantity,
-          });
-        } else {
-          await db.ProductOrder.create(
-            {
-              orderId: newOrder.id,
-              productId: product.id,
-              quantity: product.quantity,
-            },
-            { w: 1 },
-            { returning: true },
-          );
-        }
+  // calc subtotal & update order
+  const productsOrder = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
+  orderDB.total = calcSubtotal(productsOrder);
+  await orderDB.save();
+  return getById(orderDB.id, { include });
+}
 
-        return productDB.price * product.quantity;
-      }),
-    );
+/**
+ * Delete Product in Order
+ * @param {*} req
+ * @returns
+ */
+async function deleteProduct(req) {
+  const orderDB = await getOrder(req.params.id);
+  const product = req.body;
+  validateProduct(orderDB.products, product);
 
-    newOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
-  }
+  // delete productOrder
+  const productOrder = await db.ProductOrder.findOne({
+    where: { productId: product.id, orderId: orderDB.id },
+  });
+  await productOrder.destroy();
 
-  if (error) {
-    throw new Error(error);
-  }
-
-  // Clean products no more nedeed on productsOrder
-  if (productOrders) {
-    const producstDelete = productOrders.filter((productOrder) => {
-      if (products) {
-        return !products.some((product) => product.id === productOrder.productId);
-      }
-      return true;
-    });
-
-    await Promise.all(producstDelete.filter((productOrder) => productOrder.destroy()));
-  }
-
-  await orderDB.update(newOrder);
+  // calc subtotal & update order
+  const productsOrder = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
+  orderDB.total = calcSubtotal(productsOrder);
+  await orderDB.save();
   return getById(orderDB.id, { include });
 }
 
@@ -219,5 +250,8 @@ module.exports = {
   getAll,
   getById,
   update,
+  addProduct,
+  updateProduct,
+  deleteProduct,
   _delete,
 };

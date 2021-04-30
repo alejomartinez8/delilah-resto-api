@@ -35,7 +35,8 @@ module.exports = (sequelize, DataTypes) => {
           as: 'orderId',
         },
       },
-      quantity: DataTypes.DECIMAL,
+      quantity: DataTypes.INTEGER,
+      price: DataTypes.DECIMAL,
     },
     {
       sequelize,

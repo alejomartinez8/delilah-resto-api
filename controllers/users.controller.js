@@ -105,6 +105,7 @@ router.get('/', authorize('admin'), getAll);
 router.get('/getProfile', authorize('admin', 'user'), getProfile);
 router.get('/:id', authorize('admin'), getById);
 router.put('/:id', authorize(), updateValidate, update);
+
 router.delete('/:id', authorize(), _delete);
 
 module.exports = router;

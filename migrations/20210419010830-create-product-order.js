@@ -30,6 +30,9 @@ module.exports = {
         },
       },
       quantity: {
+        type: Sequelize.INTEGER,
+      },
+      price: {
         type: Sequelize.DECIMAL,
       },
       createdAt: {
