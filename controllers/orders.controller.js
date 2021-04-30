@@ -2,10 +2,22 @@
 const express = require('express');
 
 const router = express.Router();
-// const Joi = require('joi');
-// const validateRequest = require('../middleware/validateRequest');
+const Joi = require('joi');
+const validateRequest = require('../middleware/validateRequest');
 const authorize = require('../middleware/authorize');
 const orderService = require('../services/order.service');
+
+function createValidate(req, res, next) {
+  const schema = Joi.object({
+    status: Joi.string().required(),
+    paymentType: Joi.string(),
+    userId: Joi.number(),
+    products: Joi.array().items(
+      Joi.object().keys({ id: Joi.number().required(), quantity: Joi.number().required() }),
+    ),
+  });
+  validateRequest(req, next, schema);
+}
 
 function create(req, res, next) {
   orderService
@@ -28,11 +40,28 @@ function getById(req, res, next) {
     .catch(next);
 }
 
+function updateValidate(req, res, next) {
+  const schema = Joi.object({
+    status: Joi.string(),
+    paymentType: Joi.string(),
+    userId: Joi.number(),
+  });
+  validateRequest(req, next, schema);
+}
+
 function update(req, res, next) {
   orderService
     .update(req, res)
     .then((order) => res.json({ message: 'Order added', order }))
     .catch(next);
+}
+
+function validateAddProduct(req, res, next) {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+    quantity: Joi.number().required(),
+  });
+  validateRequest(req, next, schema);
 }
 
 function addProduct(req, res, next) {
@@ -42,11 +71,27 @@ function addProduct(req, res, next) {
     .catch(next);
 }
 
+function validateUpdateProduct(req, res, next) {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+    quantity: Joi.number().required(),
+    price: Joi.number().required(),
+  });
+  validateRequest(req, next, schema);
+}
+
 function updateProduct(req, res, next) {
   orderService
     .updateProduct(req)
     .then((order) => res.json({ message: 'Product updated', order }))
     .catch(next);
+}
+
+function validateDeleteProduct(req, res, next) {
+  const schema = Joi.object({
+    id: Joi.number().required(),
+  });
+  validateRequest(req, next, schema);
 }
 
 function deleteProduct(req, res, next) {
@@ -65,11 +110,11 @@ function _delete(req, res, next) {
 
 router.get('/', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
-router.post('/create', authorize('user', 'admin'), create);
-router.post('/update/product/:id', authorize('admin'), addProduct);
-router.put('/update/product/:id', authorize('admin'), updateProduct);
-router.put('/update/:id', authorize('admin'), update);
-router.delete('/update/product/:id', authorize('admin'), deleteProduct);
+router.post('/create', authorize('user', 'admin'), createValidate, create);
+router.post('/update/product/:id', authorize('admin'), validateAddProduct, addProduct);
+router.put('/update/product/:id', authorize('admin'), validateUpdateProduct, updateProduct);
+router.put('/update/:id', authorize('admin'), updateValidate, update);
+router.delete('/update/product/:id', authorize('admin'), validateDeleteProduct, deleteProduct);
 router.delete('/delete/:id', authorize('admin'), _delete);
 
 module.exports = router;

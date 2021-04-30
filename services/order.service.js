@@ -58,7 +58,6 @@ async function getById(id) {
  * @returns
  */
 const create = async (req) => {
-  console.log(req.body);
   const newOrder = req.body;
 
   // Add the userId
@@ -66,9 +65,16 @@ const create = async (req) => {
     newOrder.userId = req.user.id;
   }
 
+  // Validate if user is trying to send for another user
+  if (req.user.role === 'user' && req.user.id !== req.body.userId) {
+    throw new Error('Unauthorized - create an order for another user');
+  }
+
+  // validate if user is correct
   const userDB = await db.User.findByPk(newOrder.userId);
   if (!userDB) throw new Error('User not found');
 
+  // extract products
   const { products } = newOrder;
   newOrder.orderDate = new Date();
   newOrder.total = 0;
@@ -128,8 +134,13 @@ async function getAll(req) {
  * @returns
  */
 async function update(req) {
-  const orderDB = await await db.Order.findByPk(req.params.id);
-  if (!orderDB) throw new Error('Order not found');
+  const orderDB = await getOrder(req.params.id);
+
+  if (req.body.userId) {
+    const userDB = await db.User.findByPk(req.body.userId);
+    if (!userDB) throw new Error('User not found');
+  }
+
   await orderDB.update(req.body);
   return getById(orderDB.id, { include });
 }
