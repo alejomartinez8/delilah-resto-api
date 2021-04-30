@@ -111,10 +111,10 @@ function _delete(req, res, next) {
 router.get('/', authorize('user', 'admin'), getAll);
 router.get('/:id', authorize('user', 'admin'), getById);
 router.post('/create', authorize('user', 'admin'), createValidate, create);
-router.post('/update/product/:id', authorize('admin'), validateAddProduct, addProduct);
-router.put('/update/product/:id', authorize('admin'), validateUpdateProduct, updateProduct);
 router.put('/update/:id', authorize('admin'), updateValidate, update);
-router.delete('/update/product/:id', authorize('admin'), validateDeleteProduct, deleteProduct);
+router.post('/addProduct/:id', authorize('admin'), validateAddProduct, addProduct);
+router.put('/updateProduct/:id', authorize('admin'), validateUpdateProduct, updateProduct);
+router.delete('/deleteProduct/:id', authorize('admin'), validateDeleteProduct, deleteProduct);
 router.delete('/delete/:id', authorize('admin'), _delete);
 
 module.exports = router;

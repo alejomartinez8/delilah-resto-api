@@ -292,8 +292,8 @@ paths:
       security:
         - token: []
   # Update a Product in an Order
-  /orders/update/product/{orderId}:
-    # Add a new product
+  # Add a new product
+  /orders/addProduct/{orderId}:
     post:
       tags:
         - orders
@@ -325,7 +325,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
-    # Update a new product
+  # Update a new product
+  /orders/updateProduct/{orderId}:
     put:
       tags:
         - orders
@@ -358,7 +359,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
-    # Update a new product
+    # Delete a product
+  /orders/deleteProduct/{orderId}:
     delete:
       tags:
         - orders
