@@ -21,6 +21,23 @@ const include = [
   },
 ];
 
+async function calcSubtotal(orderId) {
+  const productsOrder = await db.ProductOrder.findAll({ where: { orderId } });
+  return productsOrder.map((item) => item.quantity * item.price).reduce((acc, cur) => acc + cur, 0);
+}
+
+async function getOrder(id) {
+  const orderDB = await db.Order.findByPk(id, { include: 'products' });
+  if (!orderDB) throw new Error('Order not found');
+  return orderDB;
+}
+
+function validateProduct(products, product) {
+  if (!products.find((productDB) => productDB.id === product.id)) {
+    throw new Error('Product is not in the order');
+  }
+}
+
 /**
  * Get an order by ID
  * @param {*} id
@@ -41,7 +58,7 @@ async function getById(id) {
  * @returns
  */
 const create = async (req) => {
-  let error = '';
+  console.log(req.body);
   const newOrder = req.body;
 
   // Add the userId
@@ -49,13 +66,9 @@ const create = async (req) => {
     newOrder.userId = req.user.id;
   }
 
-  const userDB = db.User.findByPk(newOrder.userId);
+  const userDB = await db.User.findByPk(newOrder.userId);
   if (!userDB) throw new Error('User not found');
 
-  // Verify the userId it's no void
-  if (!newOrder.userId) {
-    throw new Error('Please add an userId to create the order');
-  }
   const { products } = newOrder;
   newOrder.orderDate = new Date();
   newOrder.total = 0;
@@ -63,38 +76,27 @@ const create = async (req) => {
   const savedOrder = await db.Order.create(newOrder, { w: 1 }, { returning: true });
 
   if (products) {
-    const subtotals = await Promise.all(
+    await Promise.all(
       products.map(async (product) => {
         const productDB = await db.Product.findByPk(product.id);
 
         if (!productDB) {
-          error = 'Product not found';
+          await savedOrder.destroy();
           return new Error('Product not found');
         }
 
-        await db.ProductOrder.create(
-          {
-            orderId: savedOrder.id,
-            productId: product.id,
-            quantity: product.quantity,
-            price: productDB.price,
-          },
-          { w: 1 },
-          { returning: true },
-        );
-
-        return productDB.price * product.quantity;
+        return db.ProductOrder.create({
+          orderId: savedOrder.id,
+          productId: product.id,
+          quantity: product.quantity,
+          price: productDB.price,
+        });
       }),
     );
-
-    savedOrder.total = subtotals.reduce((acc, cur) => acc + cur, 0);
   }
 
-  if (error) {
-    await savedOrder.destroy();
-    throw new Error(error);
-  }
-
+  // calc subtotal & update order
+  savedOrder.total = await calcSubtotal(savedOrder.id);
   await savedOrder.save();
   return getById(savedOrder.id, { include });
 };
@@ -132,22 +134,6 @@ async function update(req) {
   return getById(orderDB.id, { include });
 }
 
-function calcSubtotal(productsOrder) {
-  return productsOrder.map((item) => item.quantity * item.price).reduce((acc, cur) => acc + cur, 0);
-}
-
-async function getOrder(id) {
-  const orderDB = await db.Order.findByPk(id, { include: 'products' });
-  if (!orderDB) throw new Error('Order not found');
-  return orderDB;
-}
-
-function validateProduct(products, product) {
-  if (!products.find((productDB) => productDB.id === product.id)) {
-    throw new Error('Product is not in the order');
-  }
-}
-
 /**
  * Add product to Order
  * @param {*} req
@@ -173,8 +159,7 @@ async function addProduct(req) {
   });
 
   // calc subtotal & update order
-  const productsOrder = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
-  orderDB.total = calcSubtotal(productsOrder);
+  orderDB.total = await calcSubtotal(orderDB.id);
   await orderDB.save();
   return getById(orderDB.id, { include });
 }
@@ -201,8 +186,7 @@ async function updateProduct(req) {
   });
 
   // calc subtotal & update order
-  const productsOrder = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
-  orderDB.total = calcSubtotal(productsOrder);
+  orderDB.total = await calcSubtotal(orderDB.id);
   await orderDB.save();
   return getById(orderDB.id, { include });
 }
@@ -224,8 +208,7 @@ async function deleteProduct(req) {
   await productOrder.destroy();
 
   // calc subtotal & update order
-  const productsOrder = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
-  orderDB.total = calcSubtotal(productsOrder);
+  orderDB.total = await calcSubtotal(orderDB.id);
   await orderDB.save();
   return getById(orderDB.id, { include });
 }
@@ -236,10 +219,7 @@ async function deleteProduct(req) {
  * @returns
  */
 async function _delete(req) {
-  const orderDB = await getById(req.params.id, include);
-
-  if (!orderDB) throw new Error('Order not found');
-
+  const orderDB = await getOrder(req.params.id);
   const productOrders = await db.ProductOrder.findAll({ where: { orderId: orderDB.id } });
   await Promise.all(productOrders.map(async (item) => item.destroy()));
   return orderDB.destroy(include);
