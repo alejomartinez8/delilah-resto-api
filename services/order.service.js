@@ -1,6 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 const db = require('../models');
 
+/**
+ * array to set include options
+ */
 const include = [
   {
     model: db.Product,
@@ -21,17 +24,32 @@ const include = [
   },
 ];
 
+/**
+ * Cala subtotal with and order I
+ * @param {*} orderId
+ * @returns value of subtotal
+ */
 async function calcSubtotal(orderId) {
   const productsOrder = await db.ProductOrder.findAll({ where: { orderId } });
   return productsOrder.map((item) => item.quantity * item.price).reduce((acc, cur) => acc + cur, 0);
 }
 
+/**
+ * Get and verify if and order exist
+ * @param {*} Orderid
+ * @returns order
+ */
 async function getOrder(id) {
   const orderDB = await db.Order.findByPk(id, { include: 'products' });
   if (!orderDB) throw new Error('Order not found');
   return orderDB;
 }
 
+/**
+ * Validate if a product exist in a array of products
+ * @param {*} products
+ * @param {*} product
+ */
 function validateProduct(products, product) {
   if (!products.find((productDB) => productDB.id === product.id)) {
     throw new Error('Product is not in the order');
@@ -41,7 +59,7 @@ function validateProduct(products, product) {
 /**
  * Get an order by ID
  * @param {*} id
- * @returns
+ * @returns order
  */
 async function getById(id) {
   const orderDB = await db.Order.findByPk(id, {
@@ -55,7 +73,7 @@ async function getById(id) {
 /**
  * Create an order
  * @param {*} req
- * @returns
+ * @returns order
  */
 const create = async (req) => {
   const newOrder = req.body;
@@ -110,7 +128,7 @@ const create = async (req) => {
 /**
  * get all orders filter by user
  * @param {*} req
- * @returns
+ * @returns orders
  */
 async function getAll(req) {
   const paramsQuery = {
@@ -131,7 +149,7 @@ async function getAll(req) {
 /**
  * Update an order
  * @param {*} req
- * @returns
+ * @returns order
  */
 async function update(req) {
   const orderDB = await getOrder(req.params.id);
@@ -148,7 +166,7 @@ async function update(req) {
 /**
  * Add product to Order
  * @param {*} req
- * @returns
+ * @returns order
  */
 async function addProduct(req) {
   const orderDB = await getOrder(req.params.id);
@@ -178,7 +196,7 @@ async function addProduct(req) {
 /**
  * Update Product in Order
  * @param {*} req
- * @returns
+ * @returns order
  */
 async function updateProduct(req) {
   const orderDB = await getOrder(req.params.id);
@@ -205,7 +223,7 @@ async function updateProduct(req) {
 /**
  * Delete Product in Order
  * @param {*} req
- * @returns
+ * @returns order
  */
 async function deleteProduct(req) {
   const orderDB = await getOrder(req.params.id);
@@ -227,7 +245,7 @@ async function deleteProduct(req) {
 /**
  * Delete an oder, only admin user
  * @param {*} req
- * @returns
+ * @returns order deleted
  */
 async function _delete(req) {
   const orderDB = await getOrder(req.params.id);
