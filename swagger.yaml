@@ -218,9 +218,9 @@ paths:
               userId: 2
               products:
               - id: 1
-                quantity: 20
+                quantity: 2
               - id: 2
-                quantity: 30  
+                quantity: 3  
       responses:
         200:
           $ref: '#/components/responses/OKOrder'
@@ -257,18 +257,18 @@ paths:
           $ref: '#/components/responses/Unauthorized'
       security:
         - token: []
-  # Update a product
+  # Update an Order
   /orders/update/{orderId}:
     put:
       tags:
         - orders
-      summary: Updates an order
-      description: Updates an order, you must pass the same array of products if don't like to modify it or the new products you like to update, if a product doesn't appear it will be deleted from order
+      summary: Update an order
+      description: Updates an order
       operationId: update
       parameters:
         - name: orderId
           in: path
-          description: ID of product that needs to be updated
+          description: ID of order that needs to be updated
           required: true
           schema:
             type: integer
@@ -284,11 +284,104 @@ paths:
               paymentType: Transfer
               status: new
               userId: 2
-              products:
-              - id: 1
-                quantity: 20
-              - id: 2
-                quantity: 30   
+      responses:
+        200:
+          $ref: '#/components/responses/OKOrder'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - token: []
+  # Update a Product in an Order
+  /orders/update/product/{orderId}:
+    # Add a new product
+    post:
+      tags:
+        - orders
+      summary: Add a product in an order
+      description: Add a product that doesn't exist in the order
+      operationId: addProduct
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 3
+                quantity: 3
+      responses:
+        200:
+          $ref: '#/components/responses/OKOrder'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - token: []
+    # Update a new product
+    put:
+      tags:
+        - orders
+      summary: Update a product in an order
+      description: Update a product that exist in the order
+      operationId: updateProduct
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 3
+                quantity: 3
+                price: 5
+      responses:
+        200:
+          $ref: '#/components/responses/OKOrder'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - token: []
+    # Update a new product
+    delete:
+      tags:
+        - orders
+      summary: Delete a product in an order
+      description: Update a product that exist in the order
+      operationId: deleteProduct
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order that needs to be updated
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              example:
+                id: 3
       responses:
         200:
           $ref: '#/components/responses/OKOrder'
