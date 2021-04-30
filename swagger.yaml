@@ -281,9 +281,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Order'
             example:
-              paymentType: Transfer
-              status: new
-              userId: 2
+              status: confirmed
       responses:
         200:
           $ref: '#/components/responses/OKOrder'
