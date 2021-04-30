@@ -28,46 +28,38 @@ function getById(req, res, next) {
     .catch(next);
 }
 
-// function updateValidate(req, res, next) {
-//   const schema = Joi.object({
-//     name: Joi.string().required(),
-//     price: Joi.number().required(),
-//   });
-//   validateRequest(req, next, schema);
-// }
-
 function update(req, res, next) {
   orderService
     .update(req, res)
-    .then((order) => res.json(order))
+    .then((order) => res.json({ message: 'Order added', order }))
     .catch(next);
 }
 
 function addProduct(req, res, next) {
   orderService
     .addProduct(req)
-    .then((order) => res.json(order))
+    .then((order) => res.json({ message: 'Product added', order }))
     .catch(next);
 }
 
 function updateProduct(req, res, next) {
   orderService
     .updateProduct(req)
-    .then((order) => res.json(order))
+    .then((order) => res.json({ message: 'Product updated', order }))
     .catch(next);
 }
 
 function deleteProduct(req, res, next) {
   orderService
     .deleteProduct(req)
-    .then((order) => res.json(order))
+    .then((order) => res.json({ message: 'Product deleted', order }))
     .catch(next);
 }
 
 function _delete(req, res, next) {
   orderService
     ._delete(req, res)
-    .then(() => res.json({ msg: 'Delete order successfully' }))
+    .then(() => res.json({ message: 'Order deleted' }))
     .catch(next);
 }
 
