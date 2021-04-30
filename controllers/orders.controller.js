@@ -10,7 +10,7 @@ const orderService = require('../services/order.service');
 function createValidate(req, res, next) {
   const schema = Joi.object({
     status: Joi.string().required(),
-    paymentType: Joi.string(),
+    paymentType: Joi.string().required(),
     userId: Joi.number(),
     products: Joi.array().items(
       Joi.object().keys({ id: Joi.number().required(), quantity: Joi.number().required() }),
